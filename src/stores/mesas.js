@@ -18,8 +18,15 @@ export const useMesasStore = defineStore('mesas', {
   },
   actions: {
     atualizarStatus(id, novoStatus) {
-      const mesa = this.mesas.find((m) => m.id === id)
+      const mesa = this.mesas.find((m) => m.id === Number(id))
       if (mesa) mesa.status = novoStatus
+    },
+    fecharMesa(id) {
+      const mesa = this.mesas.find((m) => m.id === Number(id))
+      if (mesa) {
+        mesa.status = 'disponivel'
+        mesa.consumo = 0
+      }
     },
   },
 })

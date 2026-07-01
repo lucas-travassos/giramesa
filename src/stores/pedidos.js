@@ -3,7 +3,6 @@ import { useMesasStore } from './mesas'
 
 export const usePedidosStore = defineStore('pedidos', {
   state: () => ({
-    // itensPorMesa: { [mesaId]: [{ produtoId, nome, preco, quantidade }] }
     itensPorMesa: {},
   }),
   getters: {
@@ -62,6 +61,15 @@ export const usePedidosStore = defineStore('pedidos', {
     enviarPedido(mesaId) {
       const mesasStore = useMesasStore()
       mesasStore.atualizarStatus(Number(mesaId), 'ocupada')
+    },
+    iniciarFechamento(mesaId) {
+      const mesasStore = useMesasStore()
+      mesasStore.atualizarStatus(Number(mesaId), 'caixa')
+    },
+    finalizarFechamento(mesaId) {
+      const mesasStore = useMesasStore()
+      mesasStore.fecharMesa(mesaId)
+      delete this.itensPorMesa[mesaId]
     },
   },
 })

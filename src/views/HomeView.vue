@@ -8,7 +8,11 @@
         :key="mesa.id"
         class="col-6 col-md-4 col-lg-3"
       >
-        <MesaCard :mesa="mesa" @clicar="handleClickMesa" />
+        <MesaCard
+          :mesa="mesa"
+          @abrir-pedido="irParaPedido"
+          @fechar-conta="irParaCheckout"
+        />
       </div>
     </div>
   </div>
@@ -17,17 +21,19 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useMesasStore } from '../stores/mesas'
+import { usePedidosStore } from '../stores/pedidos'
 import MesaCard from '../components/mesa/MesaCard.vue'
 
 const router = useRouter()
 const mesasStore = useMesasStore()
+const pedidosStore = usePedidosStore()
 
-function handleClickMesa(mesa) {
-  if (mesa.status === 'caixa') {
-    alert('Esta mesa está em fechamento. Aguarde até que fique disponível novamente.')
-    return
-  }
-
+function irParaPedido(mesa) {
   router.push(`/pedido/${mesa.id}`)
+}
+
+function irParaCheckout(mesa) {
+  pedidosStore.iniciarFechamento(mesa.id)
+  router.push(`/checkout/${mesa.id}`)
 }
 </script>
