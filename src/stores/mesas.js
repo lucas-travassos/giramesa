@@ -28,5 +28,17 @@ export const useMesasStore = defineStore('mesas', {
         mesa.consumo = 0
       }
     },
+    adicionarOuEditar(dados) {
+      if (dados.id) {
+        const idx = this.mesas.findIndex((m) => m.id === dados.id)
+        if (idx !== -1) this.mesas[idx] = { ...this.mesas[idx], numero: dados.numero }
+        return
+      }
+      const novoId = Math.max(0, ...this.mesas.map((m) => m.id)) + 1
+      this.mesas.push({ id: novoId, numero: dados.numero, status: 'disponivel', consumo: 0 })
+    },
+    remover(id) {
+      this.mesas = this.mesas.filter((m) => m.id !== id)
+    },
   },
 })

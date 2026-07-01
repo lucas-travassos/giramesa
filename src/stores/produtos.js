@@ -22,4 +22,18 @@ export const useProdutosStore = defineStore('produtos', {
     produtosPorCategoria: (state) => (categoria) =>
       state.produtos.filter((p) => p.categoria === categoria),
   },
+  actions: {
+    adicionarOuEditar(dados) {
+      if (dados.id) {
+        const idx = this.produtos.findIndex((p) => p.id === dados.id)
+        if (idx !== -1) this.produtos[idx] = { ...dados }
+        return
+      }
+      const novoId = Math.max(0, ...this.produtos.map((p) => p.id)) + 1
+      this.produtos.push({ ...dados, id: novoId })
+    },
+    remover(id) {
+      this.produtos = this.produtos.filter((p) => p.id !== id)
+    },
+  },
 })
