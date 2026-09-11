@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "seed": "node src/seeders/seed.js"
+    "seed": "node src/seeders/seed.js",
+    "seed:senhas": "node src/seeders/seedSenhas.js"
   },
   "keywords": [],
   "author": "lucas-travassos",
