@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/usuarios', require('./src/routes/usuarioRoutes'));
+app.use('/api/mesas', require('./src/routes/mesaRoutes'));
 
 app.get('/', (req, res) => {
   res.json({ status: 'GiraMesa API rodando' });
