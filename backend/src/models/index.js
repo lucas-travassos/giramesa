@@ -9,7 +9,7 @@ const Pagamento = require('./Pagamento');
 
 // Categoria 1:N Produto
 Categoria.hasMany(Produto, { foreignKey: 'categoria_id' });
-Produto.belongsTo(Categoria, { foreignKey: 'categoria_id' });
+Produto.belongsTo(Categoria, { foreignKey: 'categoria_id', as: 'categoria' });
 
 // Mesa 1:N Pedido
 Mesa.hasMany(Pedido, { foreignKey: 'mesa_id' });
