@@ -13,11 +13,11 @@ Produto.belongsTo(Categoria, { foreignKey: 'categoria_id', as: 'categoria' });
 
 // Mesa 1:N Pedido
 Mesa.hasMany(Pedido, { foreignKey: 'mesa_id' });
-Pedido.belongsTo(Mesa, { foreignKey: 'mesa_id' });
+Pedido.belongsTo(Mesa, { foreignKey: 'mesa_id', as: 'Mesa' });
 
 // Usuario 1:N Pedido
 Usuario.hasMany(Pedido, { foreignKey: 'usuario_id' });
-Pedido.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Pedido.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'Usuario' });
 
 // Pedido 1:N ItemPedido
 Pedido.hasMany(ItemPedido, { foreignKey: 'pedido_id' });
@@ -25,7 +25,7 @@ ItemPedido.belongsTo(Pedido, { foreignKey: 'pedido_id' });
 
 // Produto 1:N ItemPedido
 Produto.hasMany(ItemPedido, { foreignKey: 'produto_id' });
-ItemPedido.belongsTo(Produto, { foreignKey: 'produto_id' });
+ItemPedido.belongsTo(Produto, { foreignKey: 'produto_id', as: 'Produto' });
 
 // Pedido 1:N Pagamento
 Pedido.hasMany(Pagamento, { foreignKey: 'pedido_id' });

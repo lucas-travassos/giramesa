@@ -11,6 +11,7 @@ app.use('/api/usuarios', require('./src/routes/usuarioRoutes'));
 app.use('/api/mesas', require('./src/routes/mesaRoutes'));
 app.use('/api/categorias', require('./src/routes/categoriaRoutes'));
 app.use('/api/produtos', require('./src/routes/produtoRoutes'));
+app.use('/api/pedidos', require('./src/routes/pedidoRoutes'));
 
 app.get('/', (req, res) => {
   res.json({ status: 'GiraMesa API rodando' });
