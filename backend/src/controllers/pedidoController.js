@@ -1,10 +1,15 @@
-const { Pedido, ItemPedido, Produto, Categoria, Mesa, Usuario } = require('../models');
+const { Pedido, ItemPedido, Produto, Categoria, Mesa, Usuario, Pagamento } = require('../models');
 
 async function recalcularTotal(pedidoId) {
   const itens = await ItemPedido.findAll({ where: { pedido_id: pedidoId } });
   const total = itens.reduce((soma, item) => soma + (item.quantidade * parseFloat(item.preco_unitario)), 0);
   await Pedido.update({ valor_total: total.toFixed(2) }, { where: { pedido_id: pedidoId } });
   return total.toFixed(2);
+}
+
+async function somaPagamentos(pedidoId) {
+  const pagamentos = await Pagamento.findAll({ where: { pedido_id: pedidoId } });
+  return pagamentos.reduce((soma, p) => soma + parseFloat(p.valor), 0);
 }
 
 const includePedidoCompleto = [
@@ -148,6 +153,96 @@ async function removerItem(req, res) {
   res.json(pedidoAtualizado);
 }
 
+async function iniciarFechamento(req, res) {
+  const pedido = await Pedido.findByPk(req.params.id, { include: [{ model: Mesa, as: 'Mesa' }] });
+  if (!pedido) return res.status(404).json({ erro: 'Pedido não encontrado.' });
+
+  if (pedido.status !== 'aberto') {
+    return res.status(409).json({ erro: 'Só é possível iniciar fechamento de um pedido aberto.' });
+  }
+
+  if (parseFloat(pedido.valor_total) <= 0) {
+    return res.status(409).json({ erro: 'Não é possível fechar um pedido sem consumo registrado.' });
+  }
+
+  await pedido.update({ status: 'em_fechamento' });
+  await Mesa.update({ status: 'caixa' }, { where: { mesa_id: pedido.mesa_id } });
+
+  const pedidoAtualizado = await Pedido.findByPk(pedido.pedido_id, { include: includePedidoCompleto });
+  res.json(pedidoAtualizado);
+}
+
+async function cancelarFechamento(req, res) {
+  const pedido = await Pedido.findByPk(req.params.id);
+  if (!pedido) return res.status(404).json({ erro: 'Pedido não encontrado.' });
+
+  if (pedido.status !== 'em_fechamento') {
+    return res.status(409).json({ erro: 'Só é possível cancelar o fechamento de um pedido em fechamento.' });
+  }
+
+  const totalPago = await somaPagamentos(pedido.pedido_id);
+  if (totalPago > 0) {
+    return res.status(409).json({ erro: 'Não é possível cancelar: já existem pagamentos registrados para este pedido.' });
+  }
+
+  await pedido.update({ status: 'aberto' });
+  await Mesa.update({ status: 'ocupada' }, { where: { mesa_id: pedido.mesa_id } });
+
+  const pedidoAtualizado = await Pedido.findByPk(pedido.pedido_id, { include: includePedidoCompleto });
+  res.json(pedidoAtualizado);
+}
+
+async function registrarPagamento(req, res) {
+  const pedido = await Pedido.findByPk(req.params.id);
+  if (!pedido) return res.status(404).json({ erro: 'Pedido não encontrado.' });
+
+  if (pedido.status !== 'em_fechamento') {
+    return res.status(409).json({ erro: 'Só é possível registrar pagamento em um pedido com fechamento iniciado.' });
+  }
+
+  const { forma_pagamento, valor } = req.body;
+  if (!forma_pagamento || !valor || valor <= 0) {
+    return res.status(400).json({ erro: 'forma_pagamento e valor (maior que zero) são obrigatórios.' });
+  }
+
+  const totalPago = await somaPagamentos(pedido.pedido_id);
+  const saldoRestante = parseFloat(pedido.valor_total) - totalPago;
+
+  if (valor > saldoRestante + 0.01) {
+    return res.status(409).json({ erro: `Valor excede o saldo restante de R$ ${saldoRestante.toFixed(2)}.` });
+  }
+
+  await Pagamento.create({ pedido_id: pedido.pedido_id, forma_pagamento, valor });
+
+  const novoTotalPago = totalPago + parseFloat(valor);
+  const quitado = novoTotalPago >= parseFloat(pedido.valor_total) - 0.01;
+
+  if (quitado) {
+    await pedido.update({ status: 'finalizado', data_fechamento: new Date() });
+    await Mesa.update({ status: 'disponivel' }, { where: { mesa_id: pedido.mesa_id } });
+  }
+
+  const pagamentos = await Pagamento.findAll({ where: { pedido_id: pedido.pedido_id } });
+  const pedidoAtualizado = await Pedido.findByPk(pedido.pedido_id, { include: includePedidoCompleto });
+
+  res.status(201).json({
+    pedido: pedidoAtualizado,
+    pagamentos,
+    saldo_restante: quitado ? '0.00' : (saldoRestante - valor).toFixed(2),
+  });
+}
+
+async function listarPagamentos(req, res) {
+  const pedido = await Pedido.findByPk(req.params.id);
+  if (!pedido) return res.status(404).json({ erro: 'Pedido não encontrado.' });
+
+  const pagamentos = await Pagamento.findAll({ where: { pedido_id: pedido.pedido_id }, order: [['data_pagamento', 'ASC']] });
+  const totalPago = await somaPagamentos(pedido.pedido_id);
+  const saldoRestante = (parseFloat(pedido.valor_total) - totalPago).toFixed(2);
+
+  res.json({ pagamentos, valor_total: pedido.valor_total, total_pago: totalPago.toFixed(2), saldo_restante: saldoRestante });
+}
+
 module.exports = {
   abrirOuBuscarPedido,
   buscarPorId,
@@ -155,4 +250,8 @@ module.exports = {
   adicionarItem,
   atualizarItem,
   removerItem,
+  iniciarFechamento,
+  cancelarFechamento,
+  registrarPagamento,
+  listarPagamentos,
 };

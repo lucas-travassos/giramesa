@@ -11,5 +11,9 @@ router.post('/', pedidoController.abrirOuBuscarPedido);
 router.post('/:id/itens', pedidoController.adicionarItem);
 router.put('/:id/itens/:itemId', pedidoController.atualizarItem);
 router.delete('/:id/itens/:itemId', pedidoController.removerItem);
+router.post('/:id/fechar', pedidoController.iniciarFechamento);
+router.post('/:id/cancelar-fechamento', pedidoController.cancelarFechamento);
+router.post('/:id/pagamentos', pedidoController.registrarPagamento);
+router.get('/:id/pagamentos', pedidoController.listarPagamentos);
 
 module.exports = router;
