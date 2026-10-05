@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/verifyToken');
+const verificarPermissao = require('../middlewares/verificarPermissao');
 const usuarioController = require('../controllers/usuarioController');
 
 router.use(verifyToken);
+router.use(verificarPermissao('administrador'));
 
 router.get('/', usuarioController.listar);
 router.get('/:id', usuarioController.buscarPorId);
