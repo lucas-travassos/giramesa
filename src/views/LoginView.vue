@@ -9,12 +9,12 @@
 
       <form @submit.prevent="handleLogin">
         <div class="mb-3">
-          <label class="form-label">Usuário</label>
+          <label class="form-label">E-mail</label>
           <input
-            v-model="usuario"
-            type="text"
+            v-model="email"
+            type="email"
             class="form-control"
-            placeholder="Digite seu usuário"
+            placeholder="Digite seu e-mail"
             required
           />
         </div>
@@ -34,7 +34,10 @@
           {{ erro }}
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+        <button type="submit" class="btn btn-primary w-100" :disabled="carregando">
+          <span v-if="carregando" class="spinner-border spinner-border-sm me-2"></span>
+          {{ carregando ? 'Entrando...' : 'Entrar' }}
+        </button>
       </form>
     </div>
   </div>
@@ -45,22 +48,24 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
-const usuario = ref('')
+const email = ref('')
 const senha = ref('')
 const erro = ref('')
+const carregando = ref(false)
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-function handleLogin() {
-  const sucesso = authStore.login(usuario.value, senha.value)
-
-  if (!sucesso) {
-    erro.value = 'Usuário ou senha inválidos.'
-    return
-  }
-
+async function handleLogin() {
   erro.value = ''
-  router.push('/home')
+  carregando.value = true
+  try {
+    await authStore.login(email.value, senha.value)
+    router.push('/home')
+  } catch (e) {
+    erro.value = e.response?.data?.erro ?? 'Não foi possível conectar ao servidor.'
+  } finally {
+    carregando.value = false
+  }
 }
 </script>

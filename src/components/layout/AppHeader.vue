@@ -14,20 +14,8 @@
 
     <div class="collapse navbar-collapse" :class="{ show: menuAberto }">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <router-link class="nav-link" to="/home">Salão</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/admin/mesas">Mesas</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/admin/produtos">Produtos</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/admin/usuarios">Usuários</router-link>
+        <li v-for="item in menu" :key="item.path" class="nav-item">
+          <router-link class="nav-link" :to="item.path">{{ item.meta.menu }}</router-link>
         </li>
       </ul>
 
@@ -45,13 +33,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const menuAberto = ref(false)
+
+// Menu gerado das rotas: so aparece o que o perfil logado pode acessar
+const menu = computed(() =>
+  router.getRoutes().filter((r) => r.meta.menu && r.meta.perfis.includes(authStore.perfil)),
+)
 
 function handleLogout() {
   authStore.logout()
