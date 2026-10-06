@@ -5,12 +5,17 @@ const verificarPermissao = require('../middlewares/verificarPermissao');
 const mesaController = require('../controllers/mesaController');
 
 router.use(verifyToken);
-router.use(verificarPermissao('administrador'));
 
-router.get('/', mesaController.listar);
-router.get('/:id', mesaController.buscarPorId);
-router.post('/', mesaController.criar);
-router.put('/:id', mesaController.atualizar);
-router.delete('/:id', mesaController.remover);
+const operacional = verificarPermissao('garcom', 'caixa', 'administrador');
+const somenteAdmin = verificarPermissao('administrador');
+
+// Leitura: todos os perfis (o salao precisa listar as mesas)
+router.get('/', operacional, mesaController.listar);
+router.get('/:id', operacional, mesaController.buscarPorId);
+
+// Escrita: somente administrador
+router.post('/', somenteAdmin, mesaController.criar);
+router.put('/:id', somenteAdmin, mesaController.atualizar);
+router.delete('/:id', somenteAdmin, mesaController.remover);
 
 module.exports = router;

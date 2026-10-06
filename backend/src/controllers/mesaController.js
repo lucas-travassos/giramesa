@@ -1,8 +1,19 @@
-const { Mesa } = require('../models');
+const { Mesa, Pedido } = require('../models');
 
 async function listar(req, res) {
   const mesas = await Mesa.findAll({ order: [['numero', 'ASC']] });
-  res.json(mesas);
+
+  // Consumo atual = valor_total do pedido ativo (aberto ou em fechamento) de cada mesa
+  const pedidosAtivos = await Pedido.findAll({
+    where: { status: ['aberto', 'em_fechamento'] },
+    attributes: ['mesa_id', 'valor_total'],
+  });
+  const consumoPorMesa = {};
+  pedidosAtivos.forEach((p) => {
+    consumoPorMesa[p.mesa_id] = parseFloat(p.valor_total);
+  });
+
+  res.json(mesas.map((m) => ({ ...m.toJSON(), consumo: consumoPorMesa[m.mesa_id] ?? 0 })));
 }
 
 async function buscarPorId(req, res) {
