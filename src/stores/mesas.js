@@ -1,22 +1,37 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
 
 export const useMesasStore = defineStore('mesas', {
   state: () => ({
-    mesas: [
-      { id: 1, numero: 1, status: 'disponivel', consumo: 0 },
-      { id: 2, numero: 2, status: 'ocupada', consumo: 87.5 },
-      { id: 3, numero: 3, status: 'ocupada', consumo: 142.9 },
-      { id: 4, numero: 4, status: 'caixa', consumo: 63.0 },
-      { id: 5, numero: 5, status: 'disponivel', consumo: 0 },
-      { id: 6, numero: 6, status: 'disponivel', consumo: 0 },
-      { id: 7, numero: 7, status: 'ocupada', consumo: 45.0 },
-      { id: 8, numero: 8, status: 'disponivel', consumo: 0 },
-    ],
+    mesas: [],
+    carregando: false,
+    erro: '',
   }),
   getters: {
+    mesasDoSalao: (state) => state.mesas.filter((m) => m.status !== 'inativa'),
     getMesaById: (state) => (id) => state.mesas.find((m) => m.id === Number(id)),
   },
   actions: {
+    async carregar() {
+      this.carregando = true
+      this.erro = ''
+      try {
+        const { data } = await api.get('/mesas')
+        // normaliza para o formato usado pelas telas: { id, numero, status, consumo }
+        this.mesas = data.map((m) => ({
+          id: m.mesa_id,
+          numero: m.numero,
+          status: m.status,
+          consumo: m.consumo,
+        }))
+      } catch (e) {
+        this.erro = e.response?.data?.erro ?? 'Não foi possível carregar as mesas.'
+      } finally {
+        this.carregando = false
+      }
+    },
+
+    // ---- TRANSITORIO (mock local): sai nos checkpoints 11.3, 11.4 e 11.6 ----
     atualizarStatus(id, novoStatus) {
       const mesa = this.mesas.find((m) => m.id === Number(id))
       if (mesa) mesa.status = novoStatus

@@ -43,7 +43,7 @@ const menuAberto = ref(false)
 
 // Menu gerado das rotas: so aparece o que o perfil logado pode acessar
 const menu = computed(() =>
-  router.getRoutes().filter((r) => r.meta.menu && r.meta.perfis.includes(authStore.perfil)),
+  router.getRoutes().filter((r) => r.meta.menu && r.meta.perfis.includes(authStore.perfil)).sort((a, b) => a.meta.ordem - b.meta.ordem),
 )
 
 function handleLogout() {
