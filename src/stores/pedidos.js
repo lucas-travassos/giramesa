@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
 import { useMesasStore } from './mesas'
 
 export const usePedidosStore = defineStore('pedidos', {
   state: () => ({
-    itensPorMesa: {},
+    itensPorMesa: {}, // carrinho local: itens novos, ainda nao enviados
   }),
   getters: {
     itensDaMesa: (state) => (mesaId) => state.itensPorMesa[mesaId] || [],
@@ -13,6 +14,7 @@ export const usePedidosStore = defineStore('pedidos', {
     },
   },
   actions: {
+    // ---- carrinho local ----
     adicionarProduto(mesaId, produto) {
       if (!this.itensPorMesa[mesaId]) this.itensPorMesa[mesaId] = []
 
@@ -29,8 +31,6 @@ export const usePedidosStore = defineStore('pedidos', {
           quantidade: 1,
         })
       }
-
-      this.sincronizarConsumo(mesaId)
     },
     removerUnidade(mesaId, produtoId) {
       const itens = this.itensPorMesa[mesaId]
@@ -43,25 +43,38 @@ export const usePedidosStore = defineStore('pedidos', {
       if (item.quantidade <= 0) {
         this.itensPorMesa[mesaId] = itens.filter((i) => i.produtoId !== produtoId)
       }
-
-      this.sincronizarConsumo(mesaId)
     },
     removerProduto(mesaId, produtoId) {
       if (!this.itensPorMesa[mesaId]) return
       this.itensPorMesa[mesaId] = this.itensPorMesa[mesaId].filter(
         (i) => i.produtoId !== produtoId
       )
-      this.sincronizarConsumo(mesaId)
     },
-    sincronizarConsumo(mesaId) {
-      const mesasStore = useMesasStore()
-      const mesa = mesasStore.getMesaById(mesaId)
-      if (mesa) mesa.consumo = this.totalDaMesa(mesaId)
+
+    // ---- API ----
+    async buscarPedidoAberto(mesaId) {
+      const { data } = await api.get('/pedidos', {
+        params: { mesa_id: mesaId, status: 'aberto' },
+      })
+      return data[0] ?? null
     },
-    enviarPedido(mesaId) {
-      const mesasStore = useMesasStore()
-      mesasStore.atualizarStatus(Number(mesaId), 'ocupada')
+
+    // POST /pedidos = "abrir ou buscar": cria se a mesa esta disponivel,
+    // devolve o pedido aberto se ja esta ocupada (seguro para reenvio)
+    async enviarPedido(mesaId) {
+      const { data: pedido } = await api.post('/pedidos', { mesa_id: Number(mesaId) })
+
+      for (const item of [...this.itensDaMesa(mesaId)]) {
+        await api.post(`/pedidos/${pedido.pedido_id}/itens`, {
+          produto_id: item.produtoId,
+          quantidade: item.quantidade,
+        })
+        // sai do carrinho so depois de gravado: se falhar no meio, o reenvio nao duplica
+        this.removerProduto(mesaId, item.produtoId)
+      }
     },
+
+    // ---- TRANSITORIO (mock local): saem no checkpoint 11.4 ----
     iniciarFechamento(mesaId) {
       const mesasStore = useMesasStore()
       mesasStore.atualizarStatus(Number(mesaId), 'caixa')

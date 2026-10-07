@@ -7,10 +7,26 @@
       </button>
     </div>
 
-    <div class="row g-4">
+    <div v-if="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+
+    <div
+      v-else-if="erroCarga"
+      class="alert alert-danger d-flex justify-content-between align-items-center"
+    >
+      <span>{{ erroCarga }}</span>
+      <button class="btn btn-sm btn-outline-danger" @click="carregarTela">Tentar de novo</button>
+    </div>
+
+    <div v-else class="row g-4">
       <!-- Coluna produtos -->
       <div class="col-lg-7">
-        <ul class="nav nav-tabs mb-3">
+        <p v-if="!produtosStore.categorias.length" class="text-muted">
+          Nenhum produto disponível.
+        </p>
+
+        <ul v-else class="nav nav-tabs mb-3">
           <li v-for="cat in produtosStore.categorias" :key="cat" class="nav-item">
             <button
               class="nav-link"
@@ -33,11 +49,29 @@
         </div>
       </div>
 
-      <!-- Coluna pedido atual -->
+      <!-- Coluna pedido -->
       <div class="col-lg-5">
         <div class="card shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">Itens da mesa</h5>
+            <!-- Ja enviado (somente leitura) -->
+            <template v-if="consumidos.length">
+              <h5 class="card-title">Já consumido</h5>
+              <div
+                v-for="item in consumidos"
+                :key="item.id"
+                class="d-flex justify-content-between small py-1 border-bottom"
+              >
+                <span>{{ item.quantidade }}x {{ item.nome }}</span>
+                <span>R$ {{ (item.quantidade * item.preco).toFixed(2) }}</span>
+              </div>
+              <div class="d-flex justify-content-between small fw-semibold mt-2 mb-4">
+                <span>Subtotal consumido</span>
+                <span>R$ {{ totalConsumido.toFixed(2) }}</span>
+              </div>
+            </template>
+
+            <!-- Carrinho (ainda nao enviado) -->
+            <h5 class="card-title">Novos itens</h5>
 
             <div v-if="itens.length === 0" class="text-muted small py-3 text-center">
               Nenhum item adicionado ainda.
@@ -52,17 +86,30 @@
               @remover-produto="pedidosStore.removerProduto(mesaId, item.produtoId)"
             />
 
-            <div class="d-flex justify-content-between mt-3 fw-bold fs-5">
-              <span>Total</span>
-              <span>R$ {{ total.toFixed(2) }}</span>
+            <div
+              v-if="consumidos.length"
+              class="d-flex justify-content-between small text-muted mt-3"
+            >
+              <span>Novos itens</span>
+              <span>R$ {{ totalNovo.toFixed(2) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2 fw-bold fs-5">
+              <span>Total da mesa</span>
+              <span>R$ {{ (totalConsumido + totalNovo).toFixed(2) }}</span>
+            </div>
+
+            <div v-if="erroEnvio" class="alert alert-danger py-2 small mt-3 mb-0">
+              {{ erroEnvio }}
             </div>
 
             <button
               class="btn btn-success w-100 mt-3"
-              :disabled="itens.length === 0"
+              :disabled="itens.length === 0 || enviando"
               @click="enviarPedido"
             >
-              <i class="bi bi-send-check me-1"></i>Enviar pedido
+              <span v-if="enviando" class="spinner-border spinner-border-sm me-2"></span>
+              <i v-else class="bi bi-send-check me-1"></i>
+              {{ enviando ? 'Enviando...' : 'Enviar pedido' }}
             </button>
           </div>
         </div>
@@ -72,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMesasStore } from '../stores/mesas'
 import { useProdutosStore } from '../stores/produtos'
@@ -87,13 +134,21 @@ const mesasStore = useMesasStore()
 const produtosStore = useProdutosStore()
 const pedidosStore = usePedidosStore()
 
-const mesaId = route.params.mesaId
+const mesaId = Number(route.params.mesaId)
 const mesa = computed(() => mesasStore.getMesaById(mesaId))
 
-const categoriaAtiva = ref(produtosStore.categorias[0])
+const categoriaAtiva = ref('')
+const consumidos = ref([])
+const carregando = ref(true)
+const erroCarga = ref('')
+const enviando = ref(false)
+const erroEnvio = ref('')
 
 const itens = computed(() => pedidosStore.itensDaMesa(mesaId))
-const total = computed(() => pedidosStore.totalDaMesa(mesaId))
+const totalNovo = computed(() => pedidosStore.totalDaMesa(mesaId))
+const totalConsumido = computed(() =>
+  consumidos.value.reduce((soma, i) => soma + i.quantidade * i.preco, 0)
+)
 
 function buscarProduto(produtoId) {
   return produtosStore.produtos.find((p) => p.id === produtoId)
@@ -103,8 +158,63 @@ function adicionarProduto(produto) {
   pedidosStore.adicionarProduto(mesaId, produto)
 }
 
-function enviarPedido() {
-  pedidosStore.enviarPedido(mesaId)
-  router.push('/home')
+// itens ja gravados no banco para o pedido aberto desta mesa (se existir)
+async function carregarConsumo() {
+  const pedido = await pedidosStore.buscarPedidoAberto(mesaId)
+  consumidos.value = (pedido?.ItemPedidos ?? []).map((i) => ({
+    id: i.item_id,
+    nome: i.Produto?.nome ?? 'Produto',
+    quantidade: i.quantidade,
+    preco: parseFloat(i.preco_unitario),
+  })).sort((a, b) => a.id - b.id)
 }
+
+async function carregarTela() {
+  carregando.value = true
+  erroCarga.value = ''
+
+  await Promise.all([produtosStore.carregar(), mesasStore.carregar()])
+  if (produtosStore.erro || mesasStore.erro) {
+    erroCarga.value = produtosStore.erro || mesasStore.erro
+    carregando.value = false
+    return
+  }
+
+  if (!mesa.value || ['caixa', 'inativa'].includes(mesa.value.status)) {
+    router.replace('/home')
+    return
+  }
+
+  try {
+    await carregarConsumo()
+  } catch (e) {
+    erroCarga.value = e.response?.data?.erro ?? 'Não foi possível carregar o consumo da mesa.'
+    carregando.value = false
+    return
+  }
+
+  if (!categoriaAtiva.value) categoriaAtiva.value = produtosStore.categorias[0] ?? ''
+  carregando.value = false
+}
+
+async function enviarPedido() {
+  enviando.value = true
+  erroEnvio.value = ''
+  try {
+    await pedidosStore.enviarPedido(mesaId)
+    router.push('/home')
+  } catch (e) {
+    erroEnvio.value =
+      e.response?.data?.erro ?? 'Não foi possível enviar o pedido. Tente novamente.'
+    try {
+      await carregarConsumo() // reflete o que ja foi gravado antes da falha
+    } catch {
+      // mantem o que ja esta na tela
+    }
+  } finally {
+    enviando.value = false
+  }
+}
+
+onMounted(carregarTela)
 </script>

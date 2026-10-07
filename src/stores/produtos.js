@@ -1,28 +1,45 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
 
 export const useProdutosStore = defineStore('produtos', {
   state: () => ({
-    categorias: ['Refrigerantes', 'Sucos', 'Pizzas', 'Hambúrgueres'],
-    produtos: [
-      { id: 1, nome: 'Coca-Cola 350ml', categoria: 'Refrigerantes', preco: 6.0 },
-      { id: 2, nome: 'Guaraná 350ml', categoria: 'Refrigerantes', preco: 6.0 },
-      { id: 3, nome: 'Sprite 350ml', categoria: 'Refrigerantes', preco: 6.0 },
-      { id: 4, nome: 'Suco de Laranja', categoria: 'Sucos', preco: 8.5 },
-      { id: 5, nome: 'Suco de Uva', categoria: 'Sucos', preco: 8.5 },
-      { id: 6, nome: 'Limonada', categoria: 'Sucos', preco: 7.0 },
-      { id: 7, nome: 'Pizza Margherita', categoria: 'Pizzas', preco: 45.0 },
-      { id: 8, nome: 'Pizza Calabresa', categoria: 'Pizzas', preco: 48.0 },
-      { id: 9, nome: 'Pizza 4 Queijos', categoria: 'Pizzas', preco: 52.0 },
-      { id: 10, nome: 'Hambúrguer Clássico', categoria: 'Hambúrgueres', preco: 28.0 },
-      { id: 11, nome: 'Hambúrguer Bacon', categoria: 'Hambúrgueres', preco: 32.0 },
-      { id: 12, nome: 'Hambúrguer Vegetariano', categoria: 'Hambúrgueres', preco: 30.0 },
-    ],
+    produtos: [],
+    carregando: false,
+    erro: '',
   }),
   getters: {
-    produtosPorCategoria: (state) => (categoria) =>
-      state.produtos.filter((p) => p.categoria === categoria),
+    produtosAtivos: (state) => state.produtos.filter((p) => p.status === 'ativo'),
+    // abas do pedido: categorias com produto ativo, em ordem alfabetica
+    categorias() {
+      const nomes = new Set(this.produtosAtivos.map((p) => p.categoria))
+      return [...nomes].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+    },
+    produtosPorCategoria() {
+      return (categoria) => this.produtosAtivos.filter((p) => p.categoria === categoria)
+    },
   },
   actions: {
+    async carregar() {
+      this.carregando = true
+      this.erro = ''
+      try {
+        const { data } = await api.get('/produtos')
+        // normaliza: preco chega como texto ("6.00") e a categoria vem aninhada
+        this.produtos = data.map((p) => ({
+          id: p.produto_id,
+          nome: p.nome,
+          categoria: p.categoria?.nome ?? 'Sem categoria',
+          preco: parseFloat(p.preco),
+          status: p.status,
+        }))
+      } catch (e) {
+        this.erro = e.response?.data?.erro ?? 'Não foi possível carregar os produtos.'
+      } finally {
+        this.carregando = false
+      }
+    },
+
+    // ---- TRANSITORIO (mock local): sai no checkpoint 11.7 ----
     adicionarOuEditar(dados) {
       if (dados.id) {
         const idx = this.produtos.findIndex((p) => p.id === dados.id)
