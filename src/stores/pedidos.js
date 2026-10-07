@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import api from '../services/api'
-import { useMesasStore } from './mesas'
 
 export const usePedidosStore = defineStore('pedidos', {
   state: () => ({
@@ -51,12 +50,16 @@ export const usePedidosStore = defineStore('pedidos', {
       )
     },
 
-    // ---- API ----
-    async buscarPedidoAberto(mesaId) {
-      const { data } = await api.get('/pedidos', {
-        params: { mesa_id: mesaId, status: 'aberto' },
-      })
+    // ---- pedido (API) ----
+    async buscarPedidoPorStatus(mesaId, status) {
+      const { data } = await api.get('/pedidos', { params: { mesa_id: mesaId, status } })
       return data[0] ?? null
+    },
+    buscarPedidoAberto(mesaId) {
+      return this.buscarPedidoPorStatus(mesaId, 'aberto')
+    },
+    buscarPedidoEmFechamento(mesaId) {
+      return this.buscarPedidoPorStatus(mesaId, 'em_fechamento')
     },
 
     // POST /pedidos = "abrir ou buscar": cria se a mesa esta disponivel,
@@ -74,15 +77,25 @@ export const usePedidosStore = defineStore('pedidos', {
       }
     },
 
-    // ---- TRANSITORIO (mock local): saem no checkpoint 11.4 ----
-    iniciarFechamento(mesaId) {
-      const mesasStore = useMesasStore()
-      mesasStore.atualizarStatus(Number(mesaId), 'caixa')
+    // ---- fechamento e pagamentos (API) ----
+    async iniciarFechamento(mesaId) {
+      const pedido = await this.buscarPedidoAberto(mesaId)
+      if (!pedido) throw new Error('Nenhum pedido aberto encontrado para esta mesa.')
+      await api.post(`/pedidos/${pedido.pedido_id}/fechar`)
     },
-    finalizarFechamento(mesaId) {
-      const mesasStore = useMesasStore()
-      mesasStore.fecharMesa(mesaId)
-      delete this.itensPorMesa[mesaId]
+    async listarPagamentos(pedidoId) {
+      const { data } = await api.get(`/pedidos/${pedidoId}/pagamentos`)
+      return data
+    },
+    async registrarPagamento(pedidoId, formaPagamento, valor) {
+      const { data } = await api.post(`/pedidos/${pedidoId}/pagamentos`, {
+        forma_pagamento: formaPagamento,
+        valor,
+      })
+      return data // { pedido, pagamentos, saldo_restante }
+    },
+    async cancelarFechamento(pedidoId) {
+      await api.post(`/pedidos/${pedidoId}/cancelar-fechamento`)
     },
   },
 })

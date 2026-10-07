@@ -31,7 +31,16 @@
         </button>
       </div>
 
-      <!-- Caixa: avisa para aguardar -->
+      <!-- Em fechamento: caixa/administrador retomam o checkout -->
+      <button
+        v-else-if="podeFechar"
+        class="btn btn-sm btn-warning w-100"
+        @click="$emit('abrir-checkout', mesa)"
+      >
+        Continuar checkout
+      </button>
+
+      <!-- Em fechamento: garçom apenas aguarda -->
       <button
         v-else
         class="btn btn-sm btn-outline-secondary w-100"
@@ -52,7 +61,7 @@ const props = defineProps({
   mesa: { type: Object, required: true },
 })
 
-defineEmits(['abrir-pedido', 'fechar-conta', 'aguardar'])
+defineEmits(['abrir-pedido', 'fechar-conta', 'abrir-checkout', 'aguardar'])
 
 const authStore = useAuthStore()
 const visual = computed(() => STATUS_MESA[props.mesa.status])

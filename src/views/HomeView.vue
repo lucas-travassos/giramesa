@@ -43,7 +43,8 @@
         <MesaCard
           :mesa="mesa"
           @abrir-pedido="irParaPedido"
-          @fechar-conta="irParaCheckout"
+          @fechar-conta="iniciarFechamento"
+          @abrir-checkout="irParaCheckout"
           @aguardar="avisarCaixa"
         />
       </div>
@@ -56,6 +57,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMesasStore } from '../stores/mesas'
 import { usePedidosStore } from '../stores/pedidos'
+import { mensagemErro } from '../utils/erro'
 import MesaCard from '../components/mesa/MesaCard.vue'
 
 const router = useRouter()
@@ -66,18 +68,31 @@ let timer = null
 
 onMounted(() => mesasStore.carregar())
 
+function avisar(texto) {
+  aviso.value = texto
+  clearTimeout(timer)
+  timer = setTimeout(() => (aviso.value = ''), 4000)
+}
+
 function irParaPedido(mesa) {
   router.push(`/pedido/${mesa.id}`)
 }
 
 function irParaCheckout(mesa) {
-  pedidosStore.iniciarFechamento(mesa.id) // transitorio (mock) ate o 11.4
   router.push(`/checkout/${mesa.id}`)
 }
 
+async function iniciarFechamento(mesa) {
+  try {
+    await pedidosStore.iniciarFechamento(mesa.id)
+    router.push(`/checkout/${mesa.id}`)
+  } catch (e) {
+    avisar(mensagemErro(e, 'Não foi possível iniciar o fechamento da conta.'))
+    mesasStore.carregar()
+  }
+}
+
 function avisarCaixa(mesa) {
-  aviso.value = `A Mesa ${mesa.numero} está em fechamento. Aguarde até que fique disponível.`
-  clearTimeout(timer)
-  timer = setTimeout(() => (aviso.value = ''), 4000)
+  avisar(`A Mesa ${mesa.numero} está em fechamento. Aguarde até que fique disponível.`)
 }
 </script>

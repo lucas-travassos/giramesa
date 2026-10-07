@@ -31,18 +31,7 @@ export const useMesasStore = defineStore('mesas', {
       }
     },
 
-    // ---- TRANSITORIO (mock local): sai nos checkpoints 11.3, 11.4 e 11.6 ----
-    atualizarStatus(id, novoStatus) {
-      const mesa = this.mesas.find((m) => m.id === Number(id))
-      if (mesa) mesa.status = novoStatus
-    },
-    fecharMesa(id) {
-      const mesa = this.mesas.find((m) => m.id === Number(id))
-      if (mesa) {
-        mesa.status = 'disponivel'
-        mesa.consumo = 0
-      }
-    },
+    // ---- TRANSITORIO (mock local): sai no checkpoint 11.6 ----
     adicionarOuEditar(dados) {
       if (dados.id) {
         const idx = this.mesas.findIndex((m) => m.id === dados.id)
