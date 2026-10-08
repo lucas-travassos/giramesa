@@ -2,6 +2,14 @@ const bcrypt = require('bcrypt');
 const { Usuario } = require('../models');
 
 const camposPublicos = ['usuario_id', 'nome', 'email', 'nivel_acesso', 'status', 'created_at'];
+const MSG_ULTIMO_ADMIN = 'Este é o único administrador ativo do sistema.';
+
+// O sistema nunca pode ficar sem nenhum administrador ativo
+async function ehUltimoAdminAtivo(usuario) {
+  if (usuario.nivel_acesso !== 'administrador' || usuario.status !== 'ativo') return false;
+  const ativos = await Usuario.count({ where: { nivel_acesso: 'administrador', status: 'ativo' } });
+  return ativos <= 1;
+}
 
 async function listar(req, res) {
   const usuarios = await Usuario.findAll({ attributes: camposPublicos, order: [['nome', 'ASC']] });
@@ -39,6 +47,13 @@ async function atualizar(req, res) {
   if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado.' });
 
   const { nome, email, senha, nivel_acesso, status } = req.body;
+
+  const deixaDeSerAdminAtivo =
+    (nivel_acesso && nivel_acesso !== 'administrador') || (status && status !== 'ativo');
+  if (deixaDeSerAdminAtivo && (await ehUltimoAdminAtivo(usuario))) {
+    return res.status(409).json({ erro: MSG_ULTIMO_ADMIN });
+  }
+
   const dados = { nome, email, nivel_acesso, status };
   if (senha) dados.senha = await bcrypt.hash(senha, 10);
 
@@ -57,6 +72,10 @@ async function atualizar(req, res) {
 async function remover(req, res) {
   const usuario = await Usuario.findByPk(req.params.id);
   if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+  if (await ehUltimoAdminAtivo(usuario)) {
+    return res.status(409).json({ erro: MSG_ULTIMO_ADMIN });
+  }
 
   await usuario.update({ status: 'inativo' });
   res.json({ mensagem: 'Usuário inativado com sucesso.' });
