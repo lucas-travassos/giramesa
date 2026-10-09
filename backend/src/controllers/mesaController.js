@@ -1,5 +1,10 @@
 const { Mesa, Pedido } = require('../models');
 
+const MSG_STATUS =
+  'O status ocupada/caixa é controlado pelo atendimento. O administrador só alterna entre disponível e inativa, com a mesa livre.';
+const MSG_NUMERO =
+  'Esta mesa já tem histórico de pedidos e seu número não pode ser alterado. Para trocar, inative-a e cadastre uma nova mesa.';
+
 async function listar(req, res) {
   const mesas = await Mesa.findAll({ order: [['numero', 'ASC']] });
 
@@ -13,7 +18,17 @@ async function listar(req, res) {
     consumoPorMesa[p.mesa_id] = parseFloat(p.valor_total);
   });
 
-  res.json(mesas.map((m) => ({ ...m.toJSON(), consumo: consumoPorMesa[m.mesa_id] ?? 0 })));
+  // Mesas que ja tiveram algum pedido: o numero delas fica travado
+  const comPedidos = await Pedido.findAll({ attributes: ['mesa_id'], group: ['mesa_id'], raw: true });
+  const idsComHistorico = new Set(comPedidos.map((p) => p.mesa_id));
+
+  res.json(
+    mesas.map((m) => ({
+      ...m.toJSON(),
+      consumo: consumoPorMesa[m.mesa_id] ?? 0,
+      tem_historico: idsComHistorico.has(m.mesa_id),
+    }))
+  );
 }
 
 async function buscarPorId(req, res) {
@@ -42,6 +57,20 @@ async function atualizar(req, res) {
   if (!mesa) return res.status(404).json({ erro: 'Mesa não encontrada.' });
 
   const { numero, status } = req.body;
+
+  // ocupada/caixa pertencem ao fluxo de pedido e checkout: aqui so disponivel <-> inativa
+  if (status && status !== mesa.status) {
+    const livres = ['disponivel', 'inativa'];
+    if (!livres.includes(status) || !livres.includes(mesa.status)) {
+      return res.status(409).json({ erro: MSG_STATUS });
+    }
+  }
+
+  // o numero de uma mesa com pedidos e parte do historico: nao pode mudar
+  if (numero !== undefined && Number(numero) !== mesa.numero) {
+    const pedidos = await Pedido.count({ where: { mesa_id: mesa.mesa_id } });
+    if (pedidos > 0) return res.status(409).json({ erro: MSG_NUMERO });
+  }
 
   try {
     await mesa.update({ numero, status });
