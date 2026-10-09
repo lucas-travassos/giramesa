@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import api from '../services/api'
+import { mensagemErro } from '../utils/erro'
 
 export const useMesasStore = defineStore('mesas', {
   state: () => ({
@@ -23,26 +24,26 @@ export const useMesasStore = defineStore('mesas', {
           numero: m.numero,
           status: m.status,
           consumo: m.consumo,
+          temHistorico: m.tem_historico,
         }))
       } catch (e) {
-        this.erro = e.response?.data?.erro ?? 'Não foi possível carregar as mesas.'
+        this.erro = mensagemErro(e, 'Não foi possível carregar as mesas.')
       } finally {
         this.carregando = false
       }
     },
 
-    // ---- TRANSITORIO (mock local): sai no checkpoint 11.6 ----
-    adicionarOuEditar(dados) {
-      if (dados.id) {
-        const idx = this.mesas.findIndex((m) => m.id === dados.id)
-        if (idx !== -1) this.mesas[idx] = { ...this.mesas[idx], numero: dados.numero }
-        return
-      }
-      const novoId = Math.max(0, ...this.mesas.map((m) => m.id)) + 1
-      this.mesas.push({ id: novoId, numero: dados.numero, status: 'disponivel', consumo: 0 })
+    // Cadastro (admin): lanca erro se a API recusar; o CrudManager mostra a mensagem
+    async salvar(dados) {
+      const numero = Number(dados.numero)
+      if (dados.id) await api.put(`/mesas/${dados.id}`, { numero, status: dados.status })
+      else await api.post('/mesas', { numero })
+      await this.carregar()
     },
-    remover(id) {
-      this.mesas = this.mesas.filter((m) => m.id !== id)
+
+    async inativar(id) {
+      await api.delete(`/mesas/${id}`)
+      await this.carregar()
     },
   },
 })
