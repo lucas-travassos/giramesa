@@ -9,12 +9,13 @@ import DashboardView from '../views/DashboardView.vue'
 import UsuariosView from '../views/admin/UsuariosView.vue'
 import MesasView from '../views/admin/MesasView.vue'
 import ProdutosView from '../views/admin/ProdutosView.vue'
+import CategoriasView from '../views/admin/CategoriasView.vue'
 
 const TODOS = ['garcom', 'caixa', 'administrador']
 const CAIXA = ['caixa', 'administrador']
 const ADMIN = ['administrador']
 
-// meta.perfis = quem pode acessar | meta.menu = rotulo no menu (se existir)
+// meta.perfis = quem pode acessar | meta.menu = rotulo no menu | meta.ordem = posicao no menu
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -29,7 +30,8 @@ const router = createRouter({
         { path: 'dashboard', name: 'dashboard', component: DashboardView, meta: { perfis: ADMIN, menu: 'Dashboard', ordem: 2 } },
         { path: 'admin/mesas', name: 'admin-mesas', component: MesasView, meta: { perfis: ADMIN, menu: 'Mesas', ordem: 3 } },
         { path: 'admin/produtos', name: 'admin-produtos', component: ProdutosView, meta: { perfis: ADMIN, menu: 'Produtos', ordem: 4 } },
-        { path: 'admin/usuarios', name: 'admin-usuarios', component: UsuariosView, meta: { perfis: ADMIN, menu: 'Usuários', ordem: 5 } },
+        { path: 'admin/categorias', name: 'admin-categorias', component: CategoriasView, meta: { perfis: ADMIN, menu: 'Categorias', ordem: 5 } },
+        { path: 'admin/usuarios', name: 'admin-usuarios', component: UsuariosView, meta: { perfis: ADMIN, menu: 'Usuários', ordem: 6 } },
       ],
     },
   ],

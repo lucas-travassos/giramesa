@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import api from '../services/api'
+import { mensagemErro } from '../utils/erro'
 
 export const useProdutosStore = defineStore('produtos', {
   state: () => ({
@@ -29,28 +30,36 @@ export const useProdutosStore = defineStore('produtos', {
           id: p.produto_id,
           nome: p.nome,
           categoria: p.categoria?.nome ?? 'Sem categoria',
+          categoriaId: p.categoria_id,
+          descricao: p.descricao,
           preco: parseFloat(p.preco),
           status: p.status,
+          temHistorico: p.tem_historico,
         }))
       } catch (e) {
-        this.erro = e.response?.data?.erro ?? 'Não foi possível carregar os produtos.'
+        this.erro = mensagemErro(e, 'Não foi possível carregar os produtos.')
       } finally {
         this.carregando = false
       }
     },
 
-    // ---- TRANSITORIO (mock local): sai no checkpoint 11.7 ----
-    adicionarOuEditar(dados) {
-      if (dados.id) {
-        const idx = this.produtos.findIndex((p) => p.id === dados.id)
-        if (idx !== -1) this.produtos[idx] = { ...dados }
-        return
+    // Cadastro (admin): lanca erro se a API recusar; o CrudManager mostra a mensagem
+    async salvar(dados) {
+      const corpo = {
+        categoria_id: Number(dados.categoriaId),
+        nome: dados.nome.trim(),
+        descricao: (dados.descricao ?? '').trim(),
+        preco: Math.round(Number(dados.preco) * 100) / 100,
+        status: dados.status,
       }
-      const novoId = Math.max(0, ...this.produtos.map((p) => p.id)) + 1
-      this.produtos.push({ ...dados, id: novoId })
+      if (dados.id) await api.put(`/produtos/${dados.id}`, corpo)
+      else await api.post('/produtos', corpo)
+      await this.carregar()
     },
-    remover(id) {
-      this.produtos = this.produtos.filter((p) => p.id !== id)
+
+    async inativar(id) {
+      await api.delete(`/produtos/${id}`)
+      await this.carregar()
     },
   },
 })

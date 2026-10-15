@@ -155,14 +155,13 @@ const props = defineProps({
   items: { type: Array, required: true },
   columns: { type: Array, required: true },
   novoItem: { type: Function, required: true },
-  labelItem: { type: Function, default: (item) => item.nome ?? item.id },
   carregando: { type: Boolean, default: false },
   erro: { type: String, default: '' },
   validar: { type: Function, default: () => [] },
   inativo: { type: Function, default: () => false },
   // funcoes assincronas: se a API recusar, o modal continua aberto com a mensagem
-  aoSalvar: { type: Function, default: null },
-  aoRemover: { type: Function, default: null },
+  aoSalvar: { type: Function, required: true },
+  aoRemover: { type: Function, required: true },
   rotuloRemover: { type: String, default: 'Remover' },
   iconeRemover: { type: String, default: 'bi-trash' },
   mensagemRemovido: { type: String, default: 'Registro removido com sucesso.' },
@@ -172,8 +171,7 @@ const props = defineProps({
   },
 })
 
-// 'salvar'/'remover' = caminho antigo dos CRUDs ainda mockados (saem no 11.7)
-const emit = defineEmits(['salvar', 'remover', 'recarregar'])
+defineEmits(['recarregar'])
 
 const modalAberto = ref(false)
 const editando = ref(false)
@@ -226,8 +224,7 @@ async function salvar() {
   salvando.value = true
   erroApi.value = ''
   try {
-    if (props.aoSalvar) await props.aoSalvar({ ...formData.value })
-    else emit('salvar', { ...formData.value })
+    await props.aoSalvar({ ...formData.value })
     modalAberto.value = false
     avisarSucesso('Alterações salvas com sucesso.')
   } catch (e) {
@@ -246,8 +243,7 @@ async function confirmarRemocao() {
   removendo.value = true
   erroRemocao.value = ''
   try {
-    if (props.aoRemover) await props.aoRemover(itemParaRemover.value.id)
-    else emit('remover', itemParaRemover.value.id)
+    await props.aoRemover(itemParaRemover.value.id)
     itemParaRemover.value = null
     avisarSucesso(props.mensagemRemovido)
   } catch (e) {
