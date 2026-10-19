@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   res.json({ status: 'GiraMesa API rodando' });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 sequelize.authenticate()
   .then(() => {
