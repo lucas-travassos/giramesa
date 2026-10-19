@@ -1,0 +1,200 @@
+=====================================================================
+DER ATUALIZADO - GIRAMESA (modelo logico, 6 + 1 entidades = 7 tabelas)
+Base: giramesa-mysql-v2.sql + ajustes dos checkpoints do backend
+Legenda: PK = chave primaria | FK = chave estrangeira | UQ = unico
+         NN = nao nulo | N = aceita nulo
+=====================================================================
+
+ENTIDADES
+---------------------------------------------------------------------
+USUARIOS
+  usuario_id     INT UNSIGNED   PK, auto incremento
+  nome           VARCHAR(100)   NN
+  email          VARCHAR(150)   NN, UQ
+  senha          VARCHAR(255)   NN (hash bcrypt)
+  nivel_acesso   ENUM('garcom','caixa','administrador')   NN
+  status         ENUM('ativo','inativo')   NN, padrao 'ativo'
+  created_at     DATETIME       NN, padrao agora
+
+MESAS
+  mesa_id        INT UNSIGNED   PK, auto incremento
+  numero         INT            NN, UQ
+  status         ENUM('disponivel','ocupada','caixa','inativa')
+                                NN, padrao 'disponivel'
+  (inativa = exclusao logica; acrescentada no checkpoint 6)
+
+CATEGORIAS
+  categoria_id   INT UNSIGNED   PK, auto incremento
+  nome           VARCHAR(50)    NN, UQ
+
+PRODUTOS
+  produto_id     INT UNSIGNED   PK, auto incremento
+  categoria_id   INT UNSIGNED   FK -> categorias.categoria_id, NN
+  nome           VARCHAR(100)   NN
+  descricao      TEXT           (opcional na aplicacao desde o 11.7)
+  preco          DECIMAL(8,2)   NN
+  status         ENUM('ativo','inativo')   NN, padrao 'ativo'
+  created_at     DATETIME       NN, padrao agora
+
+PEDIDOS
+  pedido_id        INT UNSIGNED PK, auto incremento
+  mesa_id          INT UNSIGNED FK -> mesas.mesa_id, NN
+  usuario_id       INT UNSIGNED FK -> usuarios.usuario_id, NN
+  data_abertura    DATETIME     NN, padrao agora
+  data_fechamento  DATETIME     N (nulo enquanto o pedido esta em aberto)
+  status           ENUM('aberto','em_fechamento','finalizado')
+                                NN, padrao 'aberto'
+  valor_total      DECIMAL(8,2) NN, padrao 0.00
+
+ITENS_PEDIDO
+  item_id          INT UNSIGNED PK, auto incremento
+  pedido_id        INT UNSIGNED FK -> pedidos.pedido_id, NN
+  produto_id       INT UNSIGNED FK -> produtos.produto_id, NN
+  quantidade       INT          NN, padrao 1
+  preco_unitario   DECIMAL(8,2) NN (preco praticado na venda)
+  observacao       VARCHAR(255) N
+
+PAGAMENTOS
+  pagamento_id     INT UNSIGNED PK, auto incremento
+  pedido_id        INT UNSIGNED FK -> pedidos.pedido_id, NN
+  forma_pagamento  ENUM('dinheiro','debito','credito','pix')   NN
+  valor            DECIMAL(8,2) NN
+  data_pagamento   DATETIME     NN, padrao agora
+
+
+RELACIONAMENTOS
+---------------------------------------------------------------------
+  CATEGORIAS 1 ---- N PRODUTOS       uma categoria agrupa varios produtos
+  MESAS      1 ---- N PEDIDOS        uma mesa tem varios pedidos ao longo do tempo
+  USUARIOS   1 ---- N PEDIDOS        um usuario registra varios pedidos
+  PEDIDOS    1 ---- N ITENS_PEDIDO   um pedido contem varios itens
+  PRODUTOS   1 ---- N ITENS_PEDIDO   um produto aparece em varios itens
+  PEDIDOS    1 ---- N PAGAMENTOS     um pedido pode ter varios pagamentos
+                                     (divisao de conta parte a parte)
+
+  Observacao: PEDIDOS x PRODUTOS e N:N, resolvido por ITENS_PEDIDO.
+
+
+DIAGRAMA (ASCII)
+---------------------------------------------------------------------
+
+ +------------+ 1     N +-----------+ 1     N +--------------+ N     1 +----------+
+ | CATEGORIAS |---------| PRODUTOS  |---------| ITENS_PEDIDO |---------| PEDIDOS  |
+ +------------+         +-----------+         +--------------+         +----------+
+ | PK categ_id|         | PK prod_id|         | PK item_id   |         | PK ped_id|
+ |    nome    |         | FK categ_id         | FK pedido_id |         | FK mesa_id
+ +------------+         |    nome   |         | FK produto_id|         | FK usuario_id
+                        |    preco  |         |    quantidade|         |  status  |
+                        |    status |         |  preco_unit. |         | valor_tot|
+                        +-----------+         |  observacao  |         +----------+
+                                              +--------------+          |  |  |
+                                                                        |  |  |
+                          +---------------------------------------------+  |  |
+                          | N                                              |  |
+                       1  |                                                |  |
+                    +----------+                                           |  |
+                    |  MESAS   |                                           |  |
+                    +----------+                  +------------------------+  |
+                    | PK mesa_id|               1 | N                          |
+                    |  numero  |            +-----------+                     |
+                    |  status  |            | USUARIOS  |                     |
+                    +----------+            +-----------+                     |
+                                            | PK usu_id |                     |
+                                            |  nome     |                     |
+                                            |  email    |        1            |
+                                            |  senha    |  +-------------+    |
+                                            | nivel_ac. |  | PAGAMENTOS  |----+
+                                            |  status   |  +-------------+  N (pedido 1:N pagamentos)
+                                            +-----------+  | PK pag_id   |
+                                                           | FK pedido_id|
+                                                           | forma_pgto  |
+                                                           |  valor      |
+                                                           | data_pgto   |
+                                                           +-------------+
+
+
+DIAGRAMA (MERMAID - cole em mermaid.live ou em um .md do GitHub para renderizar)
+---------------------------------------------------------------------
+
+erDiagram
+    CATEGORIAS ||--o{ PRODUTOS : agrupa
+    MESAS ||--o{ PEDIDOS : possui
+    USUARIOS ||--o{ PEDIDOS : registra
+    PEDIDOS ||--o{ ITENS_PEDIDO : contem
+    PRODUTOS ||--o{ ITENS_PEDIDO : compoe
+    PEDIDOS ||--o{ PAGAMENTOS : recebe
+
+    USUARIOS {
+        int usuario_id PK
+        string nome
+        string email UK
+        string senha
+        enum nivel_acesso
+        enum status
+        datetime created_at
+    }
+    MESAS {
+        int mesa_id PK
+        int numero UK
+        enum status
+    }
+    CATEGORIAS {
+        int categoria_id PK
+        string nome UK
+    }
+    PRODUTOS {
+        int produto_id PK
+        int categoria_id FK
+        string nome
+        text descricao
+        decimal preco
+        enum status
+        datetime created_at
+    }
+    PEDIDOS {
+        int pedido_id PK
+        int mesa_id FK
+        int usuario_id FK
+        datetime data_abertura
+        datetime data_fechamento
+        enum status
+        decimal valor_total
+    }
+    ITENS_PEDIDO {
+        int item_id PK
+        int pedido_id FK
+        int produto_id FK
+        int quantidade
+        decimal preco_unitario
+        string observacao
+    }
+    PAGAMENTOS {
+        int pagamento_id PK
+        int pedido_id FK
+        enum forma_pagamento
+        decimal valor
+        datetime data_pagamento
+    }
+
+
+DIFERENCAS EM RELACAO AO DER ANTERIOR (FIGURA 2)
+---------------------------------------------------------------------
+  + Nova entidade CATEGORIAS (categoria passou a ser cadastro, CRUD proprio)
+  + Nova entidade PAGAMENTOS (registro de forma/valor/data; suporta divisao)
+  + PRODUTOS ganhou categoria_id (FK)
+  + MESAS.status ganhou 'inativa' (exclusao logica)
+  + PEDIDOS.data_fechamento aceita nulo (pedido aberto)
+  + ITENS_PEDIDO.observacao aceita nulo
+  + PK renomeadas: pedidos_id -> pedido_id, itens_id -> item_id
+  + ENUMs preenchidos com os valores reais
+
+PENDENTE (checkpoint 14.3, ainda NAO implementado)
+---------------------------------------------------------------------
+  ITENS_PEDIDO.nome_produto (snapshot do nome na hora da venda)
+  Atualizar este DER quando for implementado.
+
+CONFERENCIA ANTES DE USAR NO DOCUMENTO
+---------------------------------------------------------------------
+  Este DER foi montado a partir do SQL v2 e das decisoes dos checkpoints.
+  Confira com o schema real (docs/banco/schema-atual.sql, via
+  mysqldump --no-data) ou com os models do backend e ajuste se divergir.
