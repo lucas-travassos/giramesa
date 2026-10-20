@@ -1,31 +1,41 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
+import { mensagemErro } from '../utils/erro'
 
-function aleatorio(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
+const dadosVazios = () => ({
+  dataReferencia: '',
+  faturamentoDia: 0,
+  totalPedidos: 0,
+  ticketMedio: 0,
+  faturamentoSemana: [],
+  vendasPorCategoria: [],
+  vendasPorFormaPagamento: [],
+})
 
 export const useDashboardStore = defineStore('dashboard', {
-  state: () => ({
-    faturamentoDia: aleatorio(1800, 4200),
-    totalPedidos: aleatorio(35, 90),
-    vendasPorCategoria: {
-      Refrigerantes: aleatorio(200, 600),
-      Sucos: aleatorio(150, 450),
-      Pizzas: aleatorio(800, 1800),
-      Hambúrgueres: aleatorio(600, 1500),
+  state: () => ({ ...dadosVazios(), carregando: false, erro: '' }),
+  actions: {
+    async carregar() {
+      this.carregando = true
+      this.erro = ''
+      Object.assign(this, dadosVazios())
+      try {
+        const { data } = await api.get('/dashboard')
+        this.dataReferencia = data.data_referencia
+        this.faturamentoDia = data.faturamento_dia
+        this.totalPedidos = data.total_pedidos
+        this.ticketMedio = data.ticket_medio
+        this.faturamentoSemana = data.faturamento_semana
+        this.vendasPorCategoria = data.vendas_por_categoria
+        this.vendasPorFormaPagamento = data.vendas_por_forma_pagamento
+      } catch (e) {
+        this.erro = mensagemErro(
+          e,
+          'Não foi possível carregar o dashboard. Verifique a conexão e tente novamente.',
+        )
+      } finally {
+        this.carregando = false
+      }
     },
-    faturamentoSemana: [
-      { dia: 'Seg', valor: aleatorio(1500, 3500) },
-      { dia: 'Ter', valor: aleatorio(1500, 3500) },
-      { dia: 'Qua', valor: aleatorio(1500, 3500) },
-      { dia: 'Qui', valor: aleatorio(1500, 3500) },
-      { dia: 'Sex', valor: aleatorio(2000, 4500) },
-      { dia: 'Sáb', valor: aleatorio(3000, 6000) },
-      { dia: 'Dom', valor: aleatorio(2500, 5500) },
-    ],
-  }),
-  getters: {
-    ticketMedio: (state) =>
-      (state.faturamentoDia / (state.totalPedidos || 1)).toFixed(2),
   },
 })
