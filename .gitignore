@@ -42,3 +42,6 @@ __screenshots__/
 .env
 
 codex
+
+# material institucional e avaliacoes (somente local)
+docs/referencias/institucional/

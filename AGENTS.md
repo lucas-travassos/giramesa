@@ -2,6 +2,8 @@
 
 Instruções permanentes para agentes de IA que atuam neste repositório. Este arquivo é a fonte de verdade sobre escopo, regras e decisões do projeto. Se o código contradizer algo aqui, avise o product owner antes de agir.
 
+**Ao iniciar qualquer sessão:** leia este arquivo e `docs/STATUS.md`, e confira o `STATUS.md` com o git (`git branch --show-current`, `git status`, `git log --oneline -10`). **O git é a fonte da verdade**: se o `STATUS.md` divergir do repositório, corrija o `STATUS.md` e avise o product owner.
+
 ## 1. Projeto
 
 Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **garçom (mobile)**, com fluxos de **caixa** e **administrador** (desktop, também usáveis no mobile).
@@ -41,6 +43,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 10. Dependências: `--save-exact` quando houver risco. `npm audit` apenas reporta; **nunca** `npm audit fix --force`. Há um `uuid` moderado via Sequelize, risco aceito.
 11. Idioma: interface, mensagens e comentários em pt-BR; nomes de domínio seguem o padrão existente.
 12. Sem funcionalidades além do escopo combinado: a aderência ao pedido importa na avaliação.
+13. **Redação da documentação e dos PRs:** usar tom impessoal, técnico e específico ao GiraMesa. Descrever problemas, decisões, comportamento, validações e pendências sem citar nomes pessoais ou reproduzir conversas de aprovação. Quando necessário, identificar responsabilidades pelo papel no projeto. Distinguir verificações automatizadas de validação manual e registrar os limites das evidências disponíveis. Preservar identificadores técnicos, links e dados de autoria acadêmica quando pertinentes.
 
 ### Ciclo de cada checkpoint
 
@@ -49,7 +52,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 3. **Roteiro de teste** passo a passo, cobrindo perfis, validações e falha de rede (backend desligado).
 4. O product owner testa e responde; ajustes e reteste.
 5. **Somente quando solicitado**, faça commit(s) e **`git push` imediato**, informando os hashes.
-6. Gere `docs/checkpoints/<id>-<slug>.md` (o que foi feito, por quê, arquivos, testes, commits) e atualize a documentação afetada (seção 10).
+6. **Fechamento do checkpoint (parte da definição de "pronto"):** no mesmo commit `docs:`, (a) gere `docs/checkpoints/<id>-<slug>.md` (o que foi feito, por quê, arquivos, testes, commits); (b) **reescreva `docs/STATUS.md`** com o estado real; (c) marque o item em `docs/plano-construcao.md`; (d) atualize a documentação afetada (seção 10). Sem isso o checkpoint não está fechado. Antes do push, mostre `git show --stat` para o product owner conferir.
 
 ## 5. Padrão de commits
 
@@ -77,7 +80,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 - **Mesas:** o administrador só alterna `disponivel` ↔ `inativa`; `ocupada` e `caixa` só mudam pelo fluxo de atendimento. Mesa com histórico não pode ter o número alterado.
 - **Produtos:** descrição opcional. Produto já vendido tem **nome e categoria travados** (preço, descrição e situação seguem editáveis). Produto inativo some da tela de pedido. O preço vendido fica em `preco_unitario`, então reajuste não altera consumo antigo.
 - **Categorias:** renomear com aviso; remover bloqueado se houver produtos vinculados.
-- **Dashboard:** dados reais via endpoint de agregação, só administrador.
+- **Dashboard:** dados reais via endpoint de agregação, só administrador. Considerar somente pedidos `finalizado`, pela `data_fechamento`, no dia de São Paulo. Faturamento, quantidade, ticket médio, categorias e formas de pagamento do dia; evolução dos últimos sete dias, incluindo hoje. Pagamentos parciais só entram quando o pedido é finalizado, na data de fechamento.
 
 ### Permissões
 
@@ -91,10 +94,9 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 
 ## 8. Estado atual
 
-- Backend: checkpoints 1 a 10 concluídos (setup, 7 models, seed, auth JWT, CRUDs, pedidos/itens, checkout/pagamentos, autorização por perfil).
-- Integração front↔back: 11.1 a 11.7 concluídos e testados (api client, login real, salão, pedido, checkout, CRUDs de usuários, mesas e produtos/categorias).
-- **Pendente:** 11.8 (Dashboard real). Verifique no `git log` se já foi iniciado.
-- Próximas etapas em `docs/plano-construcao.md`.
+O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, curto, nunca acumulativo) e o roteiro em `docs/plano-construcao.md`. Não duplique estado neste arquivo: ele guarda apenas regras estáveis. Quando algo vira regra permanente, migre do `STATUS.md` para a seção 7.
+
+**Handoff:** quando o product owner pedir "faça o handoff", releia o git e reescreva o `STATUS.md` com o estado real, para que uma nova sessão retome sem perda de contexto.
 
 ## 9. Lições aprendidas
 
