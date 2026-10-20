@@ -2,6 +2,8 @@
 
 Cada linha é um checkpoint: plano → aprovação → implementação → roteiro de teste → validação do Lucas → commit + push → resumo em `docs/checkpoints/`. Mensagens de commit no padrão `feat: descricao em portugues sem acento` (`fix:` e `docs:` quando couber). Back e front mudando juntos = dois commits, back primeiro.
 
+**Legenda de status:** ✅ concluído · 🔄 em andamento · ⏳ pendente. O agente marca o status do item ao fechar cada checkpoint (junto com o `docs/STATUS.md`). Itens ainda sem marca são ⏳.
+
 **Ordem recomendada (foco em entrega e apresentação):** A → D em paralelo (docs:) → B → C (itens selecionados) → E só se sobrar tempo.
 
 ## Fase A — Fechar a entrega funcional
