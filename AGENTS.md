@@ -61,6 +61,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 - Mudou back e front no mesmo checkpoint: **dois commits**, backend primeiro.
 - Nunca inclua `git commit` em bloco de construção ou de teste; commit só após validação e pedido.
 - Todo commit é seguido de `git push`. Sem `--force`, sem reescrever histórico, sem `--amend` após o push.
+- Ao entregar um PR, informar também o título sugerido para o commit de merge, no padrão do projeto e com o número do PR, por exemplo: `feat: integra dashboard real e documentacao (#1)`.
 - Exemplo de referência: `feat: cria checkout com divisao de conta, pagamento e fechamento de mesa`.
 
 ## 6. Arquitetura (confirme lendo o código)

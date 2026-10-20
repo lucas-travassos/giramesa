@@ -8,10 +8,12 @@ Cada linha é um checkpoint: plano → aprovação → implementação → rotei
 
 ## Fase A — Fechar a entrega funcional
 
+Integração do checkpoint 12: abrir um único PR de develop para main após concluir os itens 12.1, 12.2 e 12.3.
+
 | ID | Escopo | Teste esperado | Commit(s) |
 |---|---|---|---|
-| 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Critério aprovado: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado e fechado em develop; PR #1 para main | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / `e6e5a7a` documentação de fechamento |
-| 12.1 | Script `seed:demo` idempotente: histórico de pedidos e pagamentos de vários dias para demonstrar indicadores e gráficos do dashboard | Dashboard populado após rodar o script; rodar 2x não duplica | `feat: cria seed de dados demo para apresentacao` |
+| 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Critério aprovado: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado e integrado na main pelo PR #1 | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / `e6e5a7a` documentação / `109e749` merge |
+| 12.1 ✅ | Script `seed:demo` idempotente: histórico de pedidos e pagamentos dos últimos sete dias. Implementado, aplicado ao banco de demonstração e validado por script e pelo roteiro manual; concluído em develop | Dashboard populado após rodar o script; rodar 2x não duplica | `ffca9bc` backend / commit `docs:` de fechamento |
 | 12.2 | Limpeza: mocks restantes, caminho antigo `@salvar/@remover` do `CrudManager`, código morto | Todas as telas seguem funcionando; build sem warnings novos | `fix: remove mocks e codigo legado do front` |
 | 12.3 | README (instalação, `.env.example`, scripts, usuários e senha de demonstração identificados como dados do seed, como rodar front e back) | Seguir o README em máquina limpa funciona | `docs: cria readme com instalacao e execucao` |
 

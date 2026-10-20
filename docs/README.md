@@ -2,6 +2,8 @@
 
 Índice dos documentos técnicos, materiais acadêmicos e evidências de validação do GiraMesa, utilizados no trabalho em formato ABNT e na apresentação do sistema.
 
+Dados de demonstração: [execução de `seed:demo` e critérios dos dados](banco/seed-demo.md). Resultados e roteiro de validação no [checkpoint 12.1](checkpoints/12.1-seed-demonstracao.md).
+
 ## Estrutura
 
 ```
