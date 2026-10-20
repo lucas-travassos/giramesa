@@ -5,7 +5,7 @@
 Autenticação: `Authorization: Bearer <token>`. Perfil permitido: somente `administrador`.
 Sem parâmetros ou corpo. A consulta é somente de leitura.
 
-## Critério aprovado (opção A)
+## Critério de agregação aprovado
 
 - Somente pedidos com `status = finalizado`, agrupados por `data_fechamento`.
 - Dia atual em `America/Sao_Paulo` (UTC-3). O Sequelize usa UTC nas colunas DATE; os limites da consulta são convertidos para UTC. O limite inicial é inclusivo e o final, meia-noite seguinte, exclusivo.
@@ -63,6 +63,6 @@ O administrador abre Dashboard pelo menu. A tela consulta a API ao entrar e no b
 
 ## Limites da validação
 
-Build, sintaxe, HTTP com banco simulado e store Pinia foram verificados. A integração SQL passou no MySQL real com registros novos dentro de transação revertida: múltiplos itens/pagamentos, preço vendido de produto inativo, exclusão de pedidos abertos/em fechamento, pagamentos anteriores, limites do dia e série de sete dias. Datas de virada de mês/ano e arredondamento de meio centavo também foram verificados com relógio/banco simulados. Lucas confirmou que todos os testes do roteiro pela interface passaram; essa validação foi informada pelo product owner, sem prints anexados.
+Build, sintaxe, HTTP com banco simulado e store Pinia foram verificados. A integração SQL passou no MySQL real com registros novos dentro de transação revertida: múltiplos itens/pagamentos, preço vendido de produto inativo, exclusão de pedidos abertos/em fechamento, pagamentos anteriores, limites do dia e série de sete dias. Datas de virada de mês/ano e arredondamento de meio centavo também foram verificados com relógio/banco simulados. A validação manual pela interface foi aprovada conforme o roteiro do checkpoint 11.8; resultado informado pelo responsável pelo produto, sem capturas de tela anexadas.
 
 O fluxo anterior de pagamento admite tolerância de um centavo, podendo gerar pequena diferença entre faturamento por consumo e soma dos pagamentos. Esse fluxo não foi alterado pelo 11.8.

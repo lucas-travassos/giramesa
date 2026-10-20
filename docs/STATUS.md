@@ -6,22 +6,22 @@
 ## Onde estamos
 
 - **Branch de trabalho:** `develop`, conferida com o Git; `main` só recebe Pull Request.
-- **Último checkpoint concluído:** 11.8 — Dashboard real, implementado e validado pelo Lucas.
-- **Último commit:** fechamento `docs: fecha checkpoint 11.8 e atualiza status do projeto`, que contém esta versão (`git log --oneline -1` fornece o hash).
+- **Último checkpoint concluído:** 11.8 — Dashboard real, implementado e validado.
+- **Último commit:** revisão `docs: padroniza tom da documentacao e do pr`, que contém esta versão (`git log --oneline -1` fornece o hash). Fechamento funcional registrado em `e6e5a7a`.
 - **Commits de implementação:** `d565fa1` (backend) e `174d3eb` (frontend), publicados em `origin/develop`.
-- **Integração:** [PR #1 — develop para main](https://github.com/lucas-travassos/giramesa/pull/1) aberto; inclui também `c00a528` e `632dcab`. Revisão e merge dependem do Lucas.
+- **Integração:** [PR #1 — develop para main](https://github.com/lucas-travassos/giramesa/pull/1) aberto; inclui também `c00a528` e `632dcab`. Revisão e merge pendentes.
 
 ## Validação do último checkpoint
 
 - **11.8 — Dashboard real:** endpoint `GET /api/dashboard` protegido para administrador e front integrado, sem dados aleatórios.
 - Passaram: build, sintaxe, HTTP com banco simulado, store Pinia e integração SQL com MySQL real usando somente registros novos em transação revertida.
-- Lucas confirmou que todos os testes do roteiro passaram, incluindo navegação pelos três perfis, totais do dashboard e falha/recuperação de rede.
+- Validação manual aprovada conforme o roteiro do 11.8: navegação pelos três perfis, totais do dashboard e falha/recuperação de rede. Resultado informado pelo responsável pelo produto, sem capturas de tela anexadas.
 - Roteiro e resultados em `docs/checkpoints/11.8-dashboard-real.md`; contrato em `docs/api/dashboard.md`.
 
 ## Próximo passo
 
-- Lucas revisar e aprovar o PR #1; nenhum merge automático.
-- **12.1 — seed:demo idempotente:** apresentar plano e aguardar aprovação antes de implementar. Não iniciado.
+- Aguardar confirmação do merge do PR #1. Após a confirmação, atualizar a main local e retomar o desenvolvimento em develop.
+- **12.1 — seed:demo idempotente:** implementação não iniciada; retomada condicionada à confirmação do merge e à aprovação do plano.
 
 ## Pendências e decisões abertas
 
@@ -38,7 +38,8 @@
 
 ## Mudanças recentes de ambiente ou regra
 
-- Lucas aprovou o 11.8 com a opção A: pedidos finalizados pela data de fechamento. Regra permanente registrada na seção 7 do `AGENTS.md`.
+- Critério do dashboard: pedidos finalizados pela data de fechamento. Regra permanente registrada na seção 7 do `AGENTS.md`.
+- Documentação e PRs seguem redação impessoal, técnica e específica ao GiraMesa, conforme seção 4 do `AGENTS.md`.
 - Sem novas dependências, mudanças de schema ou mudanças de ambiente. Registros de integração foram revertidos; dados de demonstração preservados.
 
 ## Como retomar uma sessão

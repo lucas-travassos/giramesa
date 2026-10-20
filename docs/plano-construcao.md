@@ -1,21 +1,21 @@
 # Plano de construção — GiraMesa
 
-Cada linha é um checkpoint: plano → aprovação → implementação → roteiro de teste → validação do Lucas → commit + push → resumo em `docs/checkpoints/`. Mensagens de commit no padrão `feat: descricao em portugues sem acento` (`fix:` e `docs:` quando couber). Back e front mudando juntos = dois commits, back primeiro.
+Cada linha é um checkpoint: plano → aprovação → implementação → roteiro de teste → validação funcional → commit + push → resumo em `docs/checkpoints/`. Mensagens de commit no padrão `feat: descricao em portugues sem acento` (`fix:` e `docs:` quando couber). Alterações de backend e frontend exigem commits separados, com o backend primeiro.
 
 **Legenda de status:** ✅ concluído · 🔄 em andamento · ⏳ pendente. O agente marca o status do item ao fechar cada checkpoint (junto com o `docs/STATUS.md`). Itens ainda sem marca são ⏳.
 
-**Ordem recomendada (foco em entrega e apresentação):** A → D em paralelo (docs:) → B → C (itens selecionados) → E só se sobrar tempo.
+**Ordem recomendada (foco em entrega e apresentação):** A → D em paralelo (docs:) → B → C (itens selecionados) → E somente após aprovação de escopo adicional.
 
 ## Fase A — Fechar a entrega funcional
 
 | ID | Escopo | Teste esperado | Commit(s) |
 |---|---|---|---|
-| 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Opção A aprovada: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado pelo Lucas e fechado em develop; PR #1 para main | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / commit `docs:` de fechamento |
-| 12.1 | Script `seed:demo` idempotente: histórico de pedidos e pagamentos de vários dias para o dashboard ter o que mostrar | Dashboard populado após rodar o script; rodar 2x não duplica | `feat: cria seed de dados demo para apresentacao` |
+| 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Critério aprovado: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado e fechado em develop; PR #1 para main | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / `e6e5a7a` documentação de fechamento |
+| 12.1 | Script `seed:demo` idempotente: histórico de pedidos e pagamentos de vários dias para demonstrar indicadores e gráficos do dashboard | Dashboard populado após rodar o script; rodar 2x não duplica | `feat: cria seed de dados demo para apresentacao` |
 | 12.2 | Limpeza: mocks restantes, caminho antigo `@salvar/@remover` do `CrudManager`, código morto | Todas as telas seguem funcionando; build sem warnings novos | `fix: remove mocks e codigo legado do front` |
 | 12.3 | README (instalação, `.env.example`, scripts, usuários e senha de demonstração identificados como dados do seed, como rodar front e back) | Seguir o README em máquina limpa funciona | `docs: cria readme com instalacao e execucao` |
 
-## Fase B — UX/UI (o que mais pesa na apresentação)
+## Fase B — UX/UI dos fluxos de atendimento e administração
 
 | ID | Escopo | Teste esperado | Commit |
 |---|---|---|---|
@@ -46,12 +46,12 @@ Cada linha é um checkpoint: plano → aprovação → implementação → rotei
 | 15.1 | Estrutura `docs/` e índice | — | `docs: cria estrutura de documentacao` |
 | 15.2 | Texto ABNT: resumo, introdução, objetivos, atualizados para o sistema full-stack | Dados da capa e normas da faculdade | `docs: atualiza resumo, introducao e objetivos` |
 | 15.3 | Caso de uso e DER atualizados (`categorias`, `pagamentos`, snapshot) | 14.3 | `docs: atualiza caso de uso e der` |
-| 15.4 | Descrição das telas com figuras numeradas (desktop e mobile) | Prints do Lucas | `docs: atualiza descricao das telas` |
+| 15.4 | Descrição das telas com figuras numeradas (desktop e mobile) | Capturas das telas desktop e mobile | `docs: atualiza descricao das telas` |
 | 15.5 | Documentação da API (endpoints, perfis, exemplos, erros), gerada a partir do código | — | `docs: documenta a api` |
-| 15.6 | Metodologia, matriz de testes executados, resultados, conclusão, referências | Testes e referências do Lucas | `docs: adiciona metodologia, resultados e conclusao` |
+| 15.6 | Metodologia, matriz de testes executados, resultados, conclusão, referências | Registros dos testes executados e fontes consultadas | `docs: adiciona metodologia, resultados e conclusao` |
 | 15.7 | Roteiro de apresentação e de demonstração (passo a passo com as contas de teste) | Formato e tempo da apresentação | `docs: cria roteiro de apresentacao` |
 
-## Fase E — Evolução futura (só após aprovação do Lucas; fora do escopo do semestre)
+## Fase E — Evolução futura (depende de aprovação de escopo; fora da entrega do semestre)
 
 Deploy (front em Vercel/Netlify; back e banco em Railway/Render) e CI com GitHub Actions; histórico por mesa e cancelamento de item com motivo; fechamento de caixa por turno; estoque básico; KDS com WebSockets; divisão por item consumido; QR Code por mesa; PWA/offline.
 

@@ -43,6 +43,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 10. Dependências: `--save-exact` quando houver risco. `npm audit` apenas reporta; **nunca** `npm audit fix --force`. Há um `uuid` moderado via Sequelize, risco aceito.
 11. Idioma: interface, mensagens e comentários em pt-BR; nomes de domínio seguem o padrão existente.
 12. Sem funcionalidades além do escopo combinado: a aderência ao pedido importa na avaliação.
+13. **Redação da documentação e dos PRs:** usar tom impessoal, técnico e específico ao GiraMesa. Descrever problemas, decisões, comportamento, validações e pendências sem citar nomes pessoais ou reproduzir conversas de aprovação. Quando necessário, identificar responsabilidades pelo papel no projeto. Distinguir verificações automatizadas de validação manual e registrar os limites das evidências disponíveis. Preservar identificadores técnicos, links e dados de autoria acadêmica quando pertinentes.
 
 ### Ciclo de cada checkpoint
 

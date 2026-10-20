@@ -1,6 +1,6 @@
 # Documentação — GiraMesa
 
-Pasta única com tudo o que alimenta a documentação técnica (ABNT) e a apresentação do projeto.
+Índice dos documentos técnicos, materiais acadêmicos e evidências de validação do GiraMesa, utilizados no trabalho em formato ABNT e na apresentação do sistema.
 
 ## Estrutura
 
@@ -21,7 +21,7 @@ docs/
 └── codex/                     (prompt inicial e modelos de solicitação)
 ```
 
-## Checklist: o que o Lucas precisa colocar aqui
+## Checklist de materiais e evidências da entrega
 
 ### A. Informações da faculdade (definem o formato do trabalho)
 - [ ] Manual ou template de trabalho acadêmico da UniSENAI e exigências do professor (capa, folha de rosto, sumário, estrutura mínima) → `referencias/`
@@ -37,22 +37,22 @@ docs/
 - [ ] Imagem do DER exportada do drawSQL e o arquivo-fonte, se houver → `diagramas/`
 - [ ] `giramesa-mysql-v1.sql` e `giramesa-mysql-v2.sql` → `banco/`
 
-### C. Evidências que você precisa gerar
+### C. Evidências de implementação e validação
 - [ ] **Prints das telas**, com 1 por tela no desktop e, no mínimo, salão, pedido e checkout no mobile. Padrão de nome (segue a numeração de figuras já usada): `fig-03-login.png`, `fig-04-salao.png`, `fig-05-pedido.png`, `fig-06-checkout.png`, `fig-07-usuarios.png`, `fig-08-mesas.png`, `fig-09-produtos.png`, `fig-10-dashboard.png`; versões mobile com sufixo `-mobile`. Fazer os prints **depois** de rodar o `seed:demo` e da identidade visual (checkpoints 12.1 e 13.5), para as telas aparecerem cheias e finais → `telas/desktop/` e `telas/mobile/`
 - [ ] Coleção do Thunder Client exportada → `api/`
-- [ ] Schema atual do banco, sem dados (ex.: `mysqldump --no-data`, com o nome do seu banco) → `banco/schema-atual.sql`. Nunca incluir senhas, `.env` ou dumps com dados reais
+- [ ] Schema atual do banco, sem dados (ex.: `mysqldump --no-data`, com o nome do banco do projeto) → `banco/schema-atual.sql`. Nunca incluir senhas, `.env` ou dumps com dados reais
 - [ ] Saída de `git log --oneline` (histórico dos checkpoints) → `checkpoints/historico-commits.txt`
 - [ ] Imagem atualizada do **DER final** (com `categorias`, `pagamentos` e eventuais ajustes) e do **caso de uso** revisado → `diagramas/`
-- [ ] Resultado dos testes que você executou em cada checkpoint, mesmo que em anotações → `checkpoints/`
+- [ ] Resultados dos testes executados em cada checkpoint, com cenário, resultado esperado e resultado observado → `checkpoints/`
 - [ ] (Opcional) vídeo curto de demonstração do fluxo completo → `apresentacao/`
 
 ### D. Referências
-- [ ] Lista de fontes que você realmente consultou: slides e aulas do curso, documentação oficial (Vue, Pinia, Bootstrap, Express, Sequelize, MySQL), artigos ou sites usados na pesquisa de mercado → `referencias/fontes.md`
-- [ ] Links, livros ou vídeos citados em aula que o professor espera ver nas referências
+- [ ] Lista de fontes efetivamente consultadas: slides e aulas do curso, documentação oficial (Vue, Pinia, Bootstrap, Express, Sequelize, MySQL), artigos ou sites usados na pesquisa de mercado → `referencias/fontes.md`
+- [ ] Links, livros ou vídeos indicados em aula e utilizados na fundamentação do trabalho
 
 ### E. Apresentação
 - [ ] Template de slides da faculdade, se houver → `apresentacao/`
-- [ ] Definir quem fala o quê e quanto tempo cada parte tem (se for em grupo) → `apresentacao/informacoes.md`
+- [ ] Distribuição dos tópicos da apresentação e duração de cada etapa → `apresentacao/informacoes.md`
 - [ ] Ensaio com as três contas de teste (garçom, caixa, administrador), conforme `apresentacao/roteiro-demo.md` (será gerado no checkpoint 15.7)
 
 ## Regras desta pasta

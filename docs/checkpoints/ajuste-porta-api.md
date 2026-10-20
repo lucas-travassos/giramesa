@@ -2,7 +2,7 @@
 
 ## Problema e decisão
 
-A porta 3000 estava publicada pelo container Docker `estoque-api`. O front enviava o login para esse outro projeto e o navegador bloqueava a requisição por CORS. Lucas aprovou usar a porta 3001 no GiraMesa, mantendo o estoque na 3000.
+A porta 3000 estava publicada pelo container Docker `estoque-api`. O front enviava o login para esse outro projeto e o navegador bloqueava a requisição por CORS. A API do GiraMesa passou a usar a porta 3001, preservando o serviço de estoque na porta 3000.
 
 ## Alterações
 
@@ -21,7 +21,7 @@ O front continua em `http://localhost:5173`. Não houve instalação de dependê
 - Login da conta de teste administrador retornou token; o token não foi exibido ou registrado.
 - Módulo servido pelo Vite confirmou uso da URL `http://localhost:3001/api`.
 
-## Roteiro para validação do Lucas
+## Roteiro de validação manual
 
 1. Abrir `http://localhost:5173` e recarregar a página.
 2. Entrar com `admin@giramesa.com`; confirmar acesso ao salão.
@@ -31,8 +31,9 @@ O front continua em `http://localhost:5173`. Não houve instalação de dependê
 6. No terminal do backend, interromper com Ctrl+C e tentar entrar: confirmar mensagem de falha de conexão.
 7. Reiniciar o backend com `cd /c/xampp/htdocs/giramesa/backend && npm run dev`, confirmar conexão com MySQL e porta 3001 e repetir o login.
 
-Validação pelo navegador e pelos demais perfis: pendente do Lucas. O dashboard permanece com dados fictícios, aguardando o checkpoint 11.8.
+No encerramento deste ajuste, a validação pelo navegador e pelos demais perfis permanecia pendente e o dashboard ainda utilizava dados fictícios. A integração do dashboard e a validação dos três perfis foram registradas posteriormente no checkpoint 11.8.
 
 ## Commits
 
-Nenhum commit ou push realizado.
+- `eb36408` — ajuste da porta padrão da API para 3001.
+- `192519f` — atualização da URL da API no exemplo de ambiente do frontend.
