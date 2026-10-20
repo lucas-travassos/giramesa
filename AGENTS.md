@@ -79,7 +79,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 - **Mesas:** o administrador só alterna `disponivel` ↔ `inativa`; `ocupada` e `caixa` só mudam pelo fluxo de atendimento. Mesa com histórico não pode ter o número alterado.
 - **Produtos:** descrição opcional. Produto já vendido tem **nome e categoria travados** (preço, descrição e situação seguem editáveis). Produto inativo some da tela de pedido. O preço vendido fica em `preco_unitario`, então reajuste não altera consumo antigo.
 - **Categorias:** renomear com aviso; remover bloqueado se houver produtos vinculados.
-- **Dashboard:** dados reais via endpoint de agregação, só administrador.
+- **Dashboard:** dados reais via endpoint de agregação, só administrador. Considerar somente pedidos `finalizado`, pela `data_fechamento`, no dia de São Paulo. Faturamento, quantidade, ticket médio, categorias e formas de pagamento do dia; evolução dos últimos sete dias, incluindo hoje. Pagamentos parciais só entram quando o pedido é finalizado, na data de fechamento.
 
 ### Permissões
 

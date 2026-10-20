@@ -10,7 +10,7 @@ Cada linha é um checkpoint: plano → aprovação → implementação → rotei
 
 | ID | Escopo | Teste esperado | Commit(s) |
 |---|---|---|---|
-| 11.8 | Dashboard real: endpoint de agregação (só administrador: faturamento do dia, ticket médio, nº de pedidos, vendas por categoria, por forma de pagamento) e integração com os gráficos. Pular se o diagnóstico mostrar que já foi feito | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `feat: cria endpoint de dashboard com dados reais de pedidos e pagamentos` / `feat: integra dashboard financeiro com a api` |
+| 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Opção A aprovada: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado pelo Lucas e fechado em develop; PR #1 para main | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / commit `docs:` de fechamento |
 | 12.1 | Script `seed:demo` idempotente: histórico de pedidos e pagamentos de vários dias para o dashboard ter o que mostrar | Dashboard populado após rodar o script; rodar 2x não duplica | `feat: cria seed de dados demo para apresentacao` |
 | 12.2 | Limpeza: mocks restantes, caminho antigo `@salvar/@remover` do `CrudManager`, código morto | Todas as telas seguem funcionando; build sem warnings novos | `fix: remove mocks e codigo legado do front` |
 | 12.3 | README (instalação, `.env.example`, scripts, usuários e senha de demonstração identificados como dados do seed, como rodar front e back) | Seguir o README em máquina limpa funciona | `docs: cria readme com instalacao e execucao` |
