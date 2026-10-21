@@ -6,23 +6,24 @@
 ## Onde estamos
 
 - **Branch de trabalho:** `develop`, conferida com o Git; `main` só recebe Pull Request.
-- **Último checkpoint concluído:** 12.1 — Seed de demonstração, implementada e validada.
-- **Último commit:** fechamento `docs: fecha checkpoint 12.1 e atualiza status do projeto`, que contém esta versão (`git log --oneline -1` fornece o hash). Backend publicado em `ffca9bc`.
+- **Último checkpoint concluído:** 12.2 — Verificação do frontend, concluída sem alteração do código da aplicação.
+- **Último commit:** fechamento `docs: registra verificacao do frontend no checkpoint 12.2`, que contém esta versão (`git log --oneline -1` fornece o hash). Seed e documentação do 12.1 publicadas em `ffca9bc` e `7b1d835`.
 - **Integração:** main local em `109e749`, merge do PR #1. O trabalho do checkpoint 12 segue em develop; novo PR somente após concluir 12.1, 12.2 e 12.3.
 
 ## Validação do último checkpoint
 
-- **12.1 — seed:demo idempotente:** aplicada ao banco de demonstração. Gerados 21 pedidos finalizados, 49 itens e 28 pagamentos em sete dias, com cadastros dedicados identificados como demonstração.
-- Verificações por script passaram: MySQL real, reexecução sem duplicação, preservação de registros, totais do dashboard, novo dia, rollback, ausência da conta necessária, datas e falha de conexão controlada.
-- Validação manual aprovada conforme o roteiro do 12.1; resultado informado pelo responsável pelo produto, sem capturas de tela anexadas. Resultados e roteiro em `docs/checkpoints/12.1-seed-demonstracao.md`; execução e critérios em `docs/banco/seed-demo.md`.
+- **12.2 — Verificação do frontend:** inspeção técnica e build concluídos. Não foram encontrados mocks, o caminho antigo de salvar/remover do CRUD ou arquivos órfãos nas verificações realizadas. Nenhuma alteração no código da aplicação.
+- ESLint sem correções automáticas e build de produção passaram, sem erros ou avisos. Os 32 arquivos de src foram alcançados pelos imports locais a partir de main.js.
+- Validação manual do 12.1 permanece como evidência anterior; não houve novo teste de interface no 12.2. Limites e resultados em `docs/checkpoints/12.2-verificacao-front.md`.
+- Fechamento exclusivamente documental, autorizado após a apresentação das verificações e dos limites registrados.
 
 ## Próximo passo
 
-- Apresentar o diagnóstico e o plano do 12.2 — limpeza de mocks e código legado — antes de alterar o código.
-- Em seguida, 12.3 — README de instalação e execução. Abrir PR de develop para main somente após fechar o checkpoint 12 inteiro.
+- Aprovar o plano do 12.3 — README de instalação e execução — e definir a preparação inicial do banco antes da implementação. Abrir PR de develop para main somente após fechar o checkpoint 12 inteiro.
 
 ## Pendências e decisões abertas
 
+- Não há SQL de criação do banco versionado, e o servidor apenas autentica a conexão. Os seeds atuais pressupõem tabelas e registros iniciais existentes. O 12.3 precisa definir como preparar uma instalação limpa.
 - Autorizações pendentes para a Fase C do plano: helmet, express-rate-limit, sequelize-cli, biblioteca de validação e framework de testes. Nada disso é instalado sem aprovação.
 - Reunir o material da faculdade e os prints (checklist em `docs/README.md`).
 
@@ -40,7 +41,7 @@
 - Critério do dashboard: pedidos finalizados pela data de fechamento. Regra permanente registrada na seção 7 do `AGENTS.md`.
 - Documentação e PRs seguem redação impessoal, técnica e específica ao GiraMesa, conforme seção 4 do `AGENTS.md`.
 - Ao entregar um PR, informar o título sugerido para o commit de merge, no padrão do projeto e com o número do PR. Orientação registrada na seção 5 do `AGENTS.md`.
-- Sem novas dependências, mudanças de schema ou mudanças de ambiente. Somente novos dados de demonstração foram confirmados; fixtures de falha e data simulada foram revertidas.
+- Sem novas dependências, mudanças de schema ou mudanças de ambiente. O 12.2 não alterou o banco; os dados de demonstração preparados no 12.1 permanecem disponíveis.
 
 ## Como retomar uma sessão
 
