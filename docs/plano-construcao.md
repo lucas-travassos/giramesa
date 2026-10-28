@@ -1,57 +1,111 @@
 # Plano de construção — GiraMesa
 
-Cada linha é um checkpoint: plano → aprovação → implementação → roteiro de teste → validação funcional → commit + push → resumo em `docs/checkpoints/`. Mensagens de commit no padrão `feat: descricao em portugues sem acento` (`fix:` e `docs:` quando couber). Alterações de backend e frontend exigem commits separados, com o backend primeiro.
+Cada linha é uma entrega pequena: plano → aprovação → implementação → teste dos cenários afetados → aceite → commit + push. STATUS guarda o contexto atual; TESTES guarda a última execução por cenário; Git e PRs guardam o histórico. Não criar relatório por checkpoint. Mensagens de commit no padrão `feat: descricao em portugues sem acento` (`fix:` e `docs:` quando couber). Backend e frontend em commits separados, com backend primeiro.
 
 **Legenda de status:** ✅ concluído · 🔄 em andamento · ⏳ pendente. O agente marca o status do item ao fechar cada checkpoint (junto com o `docs/STATUS.md`). Itens ainda sem marca são ⏳.
 
-**Ordem recomendada (foco em entrega e apresentação):** A → D em paralelo (docs:) → B → C (itens selecionados) → E somente após aprovação de escopo adicional.
+## Datas e compromisso de entrega
+
+- **Entrega do sistema funcionando e documentação pronta: 20/11/2026.**
+- **Apresentação: 24/11/2026.**
+- Meta: estabilizar as funcionalidades até 13/11; 14–17/11 para regressão e correções; 18–19/11 para empacotamento e revisão final. De 21–23/11, ensaio e somente correções bloqueadoras.
+- Documentação acadêmica começa em paralelo agora. Não depende de finalizar toda a UX para redigir objetivos, metodologia, API e regras já implementadas.
+
+| Janela-alvo | Resultado esperado |
+|---|---|
+| 27–30/10 | Disponibilizar banco saudável para teste, aceitar e fechar 12.3, abrir PR do pacote atual; definir e executar 12.4 em entrega separada |
+| 31/10–06/11 | Corrigir limites de pagamento e atomicidade (14.0), criar regressão repetível (14.7), priorizar formulários e fluxo mobile (13.3/13.4); textos acadêmicos/API em paralelo |
+| 07–13/11 | Finalizar estados e feedback, identidade visual e acessibilidade básica; produzir figuras e consolidar o texto técnico |
+| 14–17/11 | Regressão integral, instalação/restauração final, correção de bloqueadores, revisão de DER/caso de uso e ABNT |
+| 18–19/11 | Congelar funcionalidades; finalizar fontes editáveis, PDF, prints e pacote demonstrável; conferir checklist de entrega |
+| 20/11 | Entregar sistema, instruções reproduzíveis e documentação final |
+| 21–23/11 | Ensaiar demonstração com os três perfis e preparar alternativa caso falhe a demonstração ao vivo |
+| 24/11 | Apresentação |
+
+As janelas são metas de trabalho. Se houver desvio, preservar funcionamento, testes e documentação; adiar as evoluções classificadas como pós-entrega.
+
+## Ordem e limites de escopo
+
+1. 12.3 concluído com aceite funcional em 28/10. A configuração persistente do frontend foi transferida ao 12.4; a variável de sessão mantém a cópia demonstrável. Não prolongar a investigação do ambiente temporário.
+2. Estabilizar o ambiente (12.4) e corrigir os riscos financeiros (14.0), com testes repetíveis (14.7), antes de ampliar o acabamento visual.
+3. Executar UX e documentação em paralelo, mantendo uma versão demonstrável.
+4. Usar [TESTES.md](TESTES.md) como roteiro único e registro atual. Reexecutar o conjunto crítico antes de PR e entrega; não repetir testes sem mudança ou risco novo.
+5. Não instalar dependências novas nem iniciar refatorações amplas para cumprir o calendário. Cada implementação mantém aprovação de escopo.
+
+## Trabalho paralelo
+
+O agente principal integra backend, alterações compartilhadas, STATUS, plano, TESTES e commits. Com plano aprovado, agentes podem assumir frontend, revisão/testes e documentação acadêmica em arquivos distintos. Qualidade usa banco descartável próprio e reporta resultados, sem aprovar automaticamente a própria implementação. Proibir edições concorrentes do mesmo arquivo e compartilhamento de fixtures entre agentes.
+
+Na revisão deste plano, dois agentes atuaram somente em leitura: prioridades técnicas e fluxo de documentação/testes. Nenhuma implementação paralela foi iniciada. Novas frentes recebem responsabilidade por arquivos e critério de aceite antes da execução.
 
 ## Fase A — Fechar a entrega funcional
 
-Integração do checkpoint 12: abrir um único PR de develop para main após concluir os itens 12.1, 12.2 e 12.3.
+O PR do pacote atual reúne 12.1, 12.2 e 12.3 e será aberto após o fechamento do 12.3. A migração 12.4 será uma entrega posterior, sem atrasar esse PR. Não abrir PR ou fazer merge sem solicitação.
 
 | ID | Escopo | Teste esperado | Commit(s) |
 |---|---|---|---|
 | 11.8 ✅ | Dashboard real: endpoint de agregação só para administrador e integração dos gráficos. Critério aprovado: pedidos finalizados por data de fechamento, dia de São Paulo. Implementado, validado e integrado na main pelo PR #1 | Números batem com pedidos pagos; garçom/caixa não acessam; backend desligado mostra erro | `d565fa1` backend / `174d3eb` frontend / `e6e5a7a` documentação / `109e749` merge |
 | 12.1 ✅ | Script `seed:demo` idempotente: histórico de pedidos e pagamentos dos últimos sete dias. Implementado, aplicado ao banco de demonstração e validado por script e pelo roteiro manual; concluído em develop | Dashboard populado após rodar o script; rodar 2x não duplica | `ffca9bc` backend / commit `docs:` de fechamento |
 | 12.2 ✅ | Verificação de mocks, caminho antigo `@salvar/@remover` e código sem uso: não foram encontrados remanescentes nas verificações realizadas. ESLint e build aprovados; sem alterações no frontend. Concluído em develop | Inspeção, ESLint e build sem erros ou avisos; validação manual anterior registrada no 12.1 | `docs: registra verificacao do frontend no checkpoint 12.2` |
-| 12.3 | README (instalação, `.env.example`, scripts, usuários e senha de demonstração identificados como dados do seed, como rodar front e back) | Seguir o README em máquina limpa funciona | `docs: cria readme com instalacao e execucao` |
+| 12.3 ✅ | README, SQL inicial e matriz de testes consolidados. Integração HTTP em banco vazio e roteiro funcional manual aprovados (28/10, mesa 10, R$ 16,00). Configuração persistente transferida ao 12.4; instalação totalmente reproduzível não comprovada | Evidências e limites em TESTES; cópia funciona com VITE_API_URL na sessão | `docs: conclui instalacao inicial e consolida testes` |
+| 12.4 ⏳ | Ambiente local sem XAMPP: migrar somente o GiraMesa para MySQL 8.4 LTS nativo ou em Docker Compose, mantendo Node/Vite locais. Destino pendente de decisão; Docker exige aprovação explícita | Importação SQL, registros e totais preservados, três perfis, seed, reinício e persistência; funcionar com serviços do XAMPP parados | Definir após aprovação do destino |
+
+### Escopo proposto do 12.4
+
+- A recuperação validada já permite executar a cópia. Migrar para um ambiente definitivo e resolver a configuração persistente de VITE_API_URL, validando reinício sem variável temporária. Não confundir recuperação com migração definitiva.
+- **Opção A:** MySQL 8.4 LTS como serviço dedicado no Windows. **Opção B, recomendada para reprodutibilidade:** somente o banco em Docker Compose, com volume persistente e porta local própria. A escolha ainda não foi aprovada; Docker/Compose instalados não equivalem a migração autorizada.
+- Preservar o serviço MySQL 8.0 existente na porta 3307 e os bancos de outros projetos. Migrar os bancos identificados como GiraMesa por SQL; criar contas de serviço no destino, sem importar tabelas internas mysql.* entre MariaDB e MySQL.
+- Conferir restauração, conteúdo, permissões e totais antes de alterar o destino usado pela aplicação. Planejar retorno ao ambiente anterior caso a validação falhe.
+- Atualizar README, exemplos de ambiente e instruções de testes; criar `compose.yaml` somente se a opção B for aprovada. Não adicionar bibliotecas à aplicação para essa migração.
+- A nova configuração do projeto não deve depender de executáveis, Apache ou diretórios do XAMPP. Como o repositório e os backups atuais ficam dentro de C:/xampp, planejar cópias verificadas fora dessa pasta antes de qualquer desinstalação. Não mover a árvore com alterações locais sem preservá-las.
+- Containerização da API/frontend, deploy e CI ficam para uma etapa futura; não entram automaticamente neste escopo.
 
 ## Fase B — UX/UI dos fluxos de atendimento e administração
 
 | ID | Escopo | Teste esperado | Commit |
 |---|---|---|---|
-| 13.1 | Toasts e modal de confirmação (Bootstrap) substituindo `alert()` e `confirm()` | Nenhum diálogo nativo restante; ações mostram feedback | `feat: troca alert e confirm por toasts e modal de confirmacao` |
+| 13.1 | Conferir e padronizar o feedback existente com Bootstrap, reutilizando modais/alerts. A inspeção de 27/10 não encontrou alert() ou confirm(); evitar recriar o que já funciona | Ações relevantes mostram sucesso/erro e remoções têm confirmação; validar antes de implementar novos componentes | Definir conforme diferenças encontradas |
 | 13.2 | Componentes padrão de carregamento, vazio e erro de rede, aplicados em todas as telas | Spinner ao carregar; mensagem clara com backend desligado | `feat: padroniza estados de carregamento, vazio e erro` |
 | 13.3 | Validações de formulário no front (nome vazio, preço negativo, e-mail inválido) espelhando o backend | Entradas inválidas bloqueadas com mensagem por campo | `feat: adiciona validacoes de formulario nos cadastros` |
 | 13.4 | Responsividade mobile do fluxo do garçom (pedido com carrinho fixo/colapsável, botões grandes) | Teste em 360px e 390px: salão → pedido → envio | `feat: otimiza fluxo do garcom para mobile` |
 | 13.5 | Identidade visual: paleta, tipografia, logo, cores de status das mesas | Visual consistente em todas as telas | `feat: aplica identidade visual do giramesa` |
 | 13.6 | Acessibilidade básica: contraste, `aria-label`, foco e teclado | Navegação por Tab nas telas principais | `feat: melhora acessibilidade das telas principais` |
 
-## Fase C — Robustez e escalabilidade do backend
+## Fase C — Segurança do fluxo financeiro e robustez
 
-| ID | Escopo | Autorização | Commit |
+| ID | Escopo | Prioridade / autorização | Commit previsto |
 |---|---|---|---|
-| 14.1 | Middleware global de erros e padronização das respostas | — | `feat: cria middleware global de tratamento de erros` |
-| 14.2 | `helmet`, rate limit no login, CORS por variável de ambiente | **Pedir:** helmet, express-rate-limit | `feat: adiciona helmet, rate limit no login e cors por ambiente` |
-| 14.3 | Snapshot do nome do produto no item do pedido (histórico sobrevive a renomeação); atualizar DER | — | `feat: grava nome do produto no item do pedido` |
-| 14.4 | Índices e constraints (ex.: `pedidos.status`, `pedidos.mesa_id`, `pagamentos.pedido_id`) em script SQL versionado | — | `feat: adiciona indices e constraints ao banco` |
-| 14.5 | Migrations no lugar de `sync` | **Pedir:** sequelize-cli | `feat: adota migrations do sequelize` |
-| 14.6 | Validação de entrada centralizada | **Pedir:** biblioteca de validação | `feat: valida entradas da api com schemas` |
-| 14.7 | Testes automatizados dos fluxos críticos (abrir pedido, fechar, pagar/dividir) | **Pedir:** framework de testes + supertest | `feat: cria testes automatizados dos fluxos de pedido e pagamento` |
-| 14.8 | Camada de `services` para pedido/pagamento (controllers só orquestram) | — | `feat: extrai regras de pedido e pagamento para services` |
+| 14.0 ⏳ | Corrigir a tolerância indevida de R$ 0,01: calcular/validar saldo em centavos, bloquear excesso e finalizar somente em zero. Tornar fechamento/pagamentos/reabertura atômicos com transação/bloqueio adequados | Obrigatório antes da entrega; plano específico antes do código. Divergência confirmada por inspeção; falha concorrente ainda não reproduzida | `fix: corrige saldo e consistencia do fechamento` |
+| 14.1 | Padronização de erros nos caminhos afetados; middleware global somente se necessário para cobrir falha identificada | Correções pontuais antes da entrega; evitar refatoração geral | Definir pelo defeito corrigido |
+| 14.2 | Helmet, rate limit no login e CORS por variável | Pós-entrega local, salvo requisito de publicação; novas bibliotecas dependem de aprovação | `feat: adiciona helmet, rate limit no login e cors por ambiente` |
+| 14.3 | Snapshot do nome do produto no item e atualização do DER | Pós-entrega, salvo exigência acadêmica. Nome/categoria de produto vendido já ficam travados | `feat: grava nome do produto no item do pedido` |
+| 14.4 | Índices e constraints adicionais em SQL versionado | Pós-entrega, salvo defeito ou gargalo demonstrado; manter FKs/índices necessários ao schema inicial | `feat: adiciona indices e constraints ao banco` |
+| 14.5 | Migrations para evolução do schema; a API atual apenas autentica a conexão, não executa sync | Pós-entrega; sequelize-cli depende de autorização | `feat: adota migrations do sequelize` |
+| 14.6 | Centralização de validação por schemas | Pós-entrega; biblioteca depende de autorização. Validações financeiras necessárias entram no 14.0 | `feat: valida entradas da api com schemas` |
+| 14.7 ⏳ | Versionar scripts repetíveis dos fluxos críticos com assert/fetch nativos do Node, banco descartável e resumo de resultados; ainda não implementados | Obrigatório antes da entrega; sem pacotes novos. Framework/Supertest somente se aprovados posteriormente | `feat: cria verificacao repetivel dos fluxos criticos` |
+| 14.8 | Extração geral de services | Pós-entrega; não ampliar a correção financeira para uma refatoração de arquitetura | `feat: extrai regras de pedido e pagamento para services` |
 
-## Fase D — Documentação (commits `docs:`, em paralelo às outras fases)
+## Fase D — Documentação final em paralelo, obrigatória até 20/11
 
 | ID | Escopo | Depende de | Commit |
 |---|---|---|---|
-| 15.1 | Estrutura `docs/` e índice | — | `docs: cria estrutura de documentacao` |
-| 15.2 | Texto ABNT: resumo, introdução, objetivos, atualizados para o sistema full-stack | Dados da capa e normas da faculdade | `docs: atualiza resumo, introducao e objetivos` |
-| 15.3 | Caso de uso e DER atualizados (`categorias`, `pagamentos`, snapshot) | 14.3 | `docs: atualiza caso de uso e der` |
+| 15.1 ✅ | Estrutura docs e índice existentes. Operação consolidada em STATUS/plano/TESTES; manter relatórios antigos como arquivo | Estrutura registrada no Git | `077d732` e revisões posteriores |
+| 15.2 | Texto ABNT: resumo, introdução, objetivos, atualizados para o sistema full-stack | Conferir os modelos institucionais locais e confirmar os dados da capa | `docs: atualiza resumo, introducao e objetivos` |
+| 15.3 | Caso de uso e DER conforme o schema efetivamente entregue, incluindo categorias e pagamentos | Não bloquear pelo snapshot adiado; descrever somente campos implementados | `docs: atualiza caso de uso e der` |
 | 15.4 | Descrição das telas com figuras numeradas (desktop e mobile) | Capturas das telas desktop e mobile | `docs: atualiza descricao das telas` |
 | 15.5 | Documentação da API (endpoints, perfis, exemplos, erros), gerada a partir do código | — | `docs: documenta a api` |
 | 15.6 | Metodologia, matriz de testes executados, resultados, conclusão, referências | Registros dos testes executados e fontes consultadas | `docs: adiciona metodologia, resultados e conclusao` |
 | 15.7 | Roteiro de apresentação e de demonstração (passo a passo com as contas de teste) | Formato e tempo da apresentação | `docs: cria roteiro de apresentacao` |
+
+Situação documental: há uma versão anterior em PDF, caso de uso em imagem e DER textual. Modelos institucionais e feedback do professor já estão disponíveis localmente em `docs/referencias/institucional/`, pasta ignorada pelo Git; conferir qual modelo se aplica antes de solicitar material novamente. Texto acadêmico final editável, documentação completa da API, capturas de tela, resultados/conclusão/referências finais e roteiro de apresentação continuam pendentes. Confirmar dados de capa, critérios aplicáveis, fontes utilizadas e duração/formato da apresentação. Não inventar referências, resultados ou figuras.
+
+## Critério do pacote de entrega
+
+- Instalação e restauração reproduzíveis; ambiente escolhido documentado e dados fictícios disponíveis.
+- Três perfis funcionando; atendimento, pagamentos e estados consistentes; regressão financeira aprovada e erro de rede tratado.
+- Fluxo do garçom utilizável em 360/390px, cadastros validados e apresentação visual coerente.
+- README, documentação acadêmica final em formato editável e PDF, DER/caso de uso, API, figuras e matriz de resultados conferidos.
+- Roteiro demonstrável ensaiado antes de 24/11, com backup verificado e alternativa de demonstração caso a execução ao vivo falhe.
 
 ## Fase E — Evolução futura (depende de aprovação de escopo; fora da entrega do semestre)
 

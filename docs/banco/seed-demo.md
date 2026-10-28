@@ -12,6 +12,8 @@ O comando usa a configuração local do backend e se conecta diretamente ao MySQ
 
 Pré-requisitos: tabelas existentes com suporte a transações (InnoDB) e usuário `garcom@giramesa.com` ativo, com perfil `garcom`. A seed não cria usuários, redefine senhas ou executa sincronização de schema.
 
+Para uma instalação nova, preparar primeiro o banco vazio com o [SQL inicial](instalacao-inicial.sql), seguindo o [README do projeto](../../README.md). Não importar esse SQL no banco de desenvolvimento existente.
+
 ## Conteúdo gerado
 
 Na primeira execução, são criados:
@@ -44,4 +46,4 @@ Em caso de erro, o comando retorna código 1 e orienta a verificar conexão, tab
 
 ## Verificações registradas
 
-Os testes do checkpoint 12.1 cobriram totais no dashboard real, reexecução, execução concorrente, novo dia, limites de data, rollback e falha de conexão controlada. A validação manual foi aprovada conforme o roteiro do checkpoint; resultado informado pelo responsável pelo produto, sem capturas de tela anexadas. Resultados e roteiro em [12.1 — Seed de demonstração](../checkpoints/12.1-seed-demonstracao.md).
+Os testes do checkpoint 12.1 cobriram totais no dashboard real, reexecução, execução concorrente, novo dia, limites de data, rollback e falha de conexão controlada. A validação manual dessa etapa foi aprovada; resultado informado pelo responsável pelo produto, sem capturas de tela anexadas. Consultar [TESTES.md](../TESTES.md) para o roteiro e os resultados atuais; o [relatório 12.1](../checkpoints/12.1-seed-demonstracao.md) permanece como evidência histórica.
