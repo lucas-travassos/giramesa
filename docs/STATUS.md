@@ -1,50 +1,38 @@
 # STATUS — GiraMesa
 
-> Documento vivo. **Reescrito por inteiro a cada checkpoint** (não acumular histórico: o histórico fica em `docs/checkpoints/` e no `git log`). Se divergir do git, o git vence.
-> Última atualização: 20/10/2026.
+> Atualizado em 28/10/2026. Contexto atual em STATUS, roteiro no plano, evidências em TESTES e histórico no Git/PRs.
 
-## Onde estamos
+## Repositório e entrega
 
-- **Branch de trabalho:** `develop`, conferida com o Git; `main` só recebe Pull Request.
-- **Último checkpoint concluído:** 11.8 — Dashboard real, implementado e validado.
-- **Último commit:** revisão `docs: padroniza tom da documentacao e do pr`, que contém esta versão (`git log --oneline -1` fornece o hash). Fechamento funcional registrado em `e6e5a7a`.
-- **Commits de implementação:** `d565fa1` (backend) e `174d3eb` (frontend), publicados em `origin/develop`.
-- **Integração:** [PR #1 — develop para main](https://github.com/lucas-travassos/giramesa/pull/1) aberto; inclui também `c00a528` e `632dcab`. Revisão e merge pendentes.
+- Branch: develop. Base anterior ao fechamento: f050c2b. Commit desta etapa: docs: conclui instalacao inicial e consolida testes; consultar git log para o hash após publicação.
+- Checkpoints 12.1–12.3 concluídos em develop; integração na main somente por PR. Antes deste fechamento, main estava em 109e749 (PR #1). Conferir o Git antes de retomar; não pressupor que o próximo PR já foi integrado.
+- 12.1: seed em ffca9bc e documentação em 7b1d835. 12.2: verificação do frontend em f050c2b. 12.3: README, SQL inicial de sete tabelas, matriz TESTES e planejamento consolidados neste fechamento.
+- Aceite funcional manual de 28/10 na cópia aprovado: administrador/dashboard, login/permissões, atendimento, pagamento/dashboard e falha/recuperação. Mesa nova 10; consumo quitado de R$ 16,00.
+- Integração por script em banco vazio aprovada em 20/10. Instalação em outra máquina não comprovada. Não repetir todo o roteiro sem mudança ou risco novo.
 
-## Validação do último checkpoint
+## Limitação aceita e transferida ao 12.4
 
-- **11.8 — Dashboard real:** endpoint `GET /api/dashboard` protegido para administrador e front integrado, sem dados aleatórios.
-- Passaram: build, sintaxe, HTTP com banco simulado, store Pinia e integração SQL com MySQL real usando somente registros novos em transação revertida.
-- Validação manual aprovada conforme o roteiro do 11.8: navegação pelos três perfis, totais do dashboard e falha/recuperação de rede. Resultado informado pelo responsável pelo produto, sem capturas de tela anexadas.
-- Roteiro e resultados em `docs/checkpoints/11.8-dashboard-real.md`; contrato em `docs/api/dashboard.md`.
+- O frontend da cópia só funcionou ao definir VITE_API_URL=http://localhost:3001/api na sessão do PowerShell antes de npm.cmd run dev. Sem a variável temporária, o erro voltou. API e CORS funcionam; causa do não carregamento persistente ainda não identificada. Nenhum arquivo .env foi aberto ou alterado pelo agente.
+- A investigação do ambiente temporário foi encerrada neste escopo. O 12.3 fecha com essa limitação explícita; instalação totalmente reproduzível não foi comprovada. Resolver e validar configuração persistente na migração 12.4.
 
-## Próximo passo
+## Ambiente e preservação
 
-- Aguardar confirmação do merge do PR #1. Após a confirmação, atualizar a main local e retomar o desenvolvimento em develop.
-- **12.1 — seed:demo idempotente:** implementação não iniciada; retomada condicionada à confirmação do merge e à aprovação do plano.
+- Projeto original: C:/xampp/htdocs/giramesa. Cópia de testes: C:/xampp/htdocs/giramesa_copia, sem Git. Backend na porta 3001; frontend na 5173.
+- Banco do aceite: giramesa_validacao_manual_20261028, na instância reconstruída temporária em 127.0.0.1:3308. Havia 21 pedidos antes do atendimento manual; não tratar essa contagem como atual após o teste.
+- Instância saudável: C:/xampp/backups/mariadb-reconstruido-20261027-821ebc89. Relatório privado: C:/xampp/backups/reconstrucao-validada-20261027-821ebc89.md. Metadados do teste: C:/xampp/backups/validacao-manual-20261028.json. Conferir processos/portas ao retomar; essa instância não é um serviço definitivo.
+- Recuperação isolada em 27/10: 17 bancos restaurados, 68 tabelas conferidas, conteúdo comparado com backup, três logins e escrita/rollback/seed aprovados, logs limpos. Dumps, credenciais e backups são privados; não publicar.
+- MariaDB original em C:/xampp/mysql/data (3306) apresentou inconsistências InnoDB. Serviço MySQL 8.0 em 3307 pertence a outra instalação e deve ser preservado. Não remover o XAMPP: repositório e backups ainda estão dentro de C:/xampp.
 
-## Pendências e decisões abertas
+## Próximo checkpoint: 12.4
 
-- Autorizações pendentes para a Fase C do plano: helmet, express-rate-limit, sequelize-cli, biblioteca de validação e framework de testes. Nada disso é instalado sem aprovação.
-- Reunir o material da faculdade e os prints (checklist em `docs/README.md`).
+- Primeiro conferir Git/PR e atualizar o checkout sem sobrescrever alterações. Desenvolvimento e commits somente em develop; não integrar PR automaticamente.
+- Apresentar plano e obter escolha do destino: A) MySQL 8.4 LTS nativo; B) somente banco em Docker Compose, recomendada pela reprodutibilidade. Nenhum destino está aprovado. Ferramentas instaladas não equivalem a autorização para migração.
+- Preservar dados e outros projetos; preparar cópias verificadas fora de C:/xampp, restauração e retorno antes de trocar o destino. Não importar tabelas internas mysql.* entre MariaDB e MySQL.
+- Node/Vite continuam locais. Validar importação, totais, três perfis, seed, reinício/persistência e configuração do frontend; funcionar com serviços do XAMPP parados. Sem deploy, CI ou containerização da aplicação neste checkpoint.
+- Depois: correção financeira 14.0 (tolerância indevida de R$ 0,01 e atomicidade), regressão repetível 14.7 e UX mobile. Falha concorrente ainda não reproduzida.
 
-## Problemas conhecidos e atenção
+## Entrega e documentação
 
-- A porta 3000 pode estar ocupada por outros projetos (container Docker). A API do GiraMesa usa a **3001**; o front usa `VITE_API_URL=http://localhost:3001/api` no `.env` local.
-- Testar navegando pela interface: carrinhos e demais estados de atendimento do Pinia zeram no reload; autenticação é restaurada do `localStorage`.
-- Dashboard agora exige API e banco ativos; sem pedidos finalizados no período, mostra valores zerados.
-- O fechamento existente aceita tolerância de R$ 0,01 na quitação e no limite do pagamento. Pode haver diferença entre consumo e soma dos pagamentos; não foi alterado neste checkpoint.
-- Falta o campo de snapshot do nome do produto em `itens_pedido` (checkpoint 14.3); o DER em `docs/diagramas/der-giramesa.txt` registra isso como pendente.
-
-## Mudanças recentes de ambiente ou regra
-
-- Critério do dashboard: pedidos finalizados pela data de fechamento. Regra permanente registrada na seção 7 do `AGENTS.md`.
-- Documentação e PRs seguem redação impessoal, técnica e específica ao GiraMesa, conforme seção 4 do `AGENTS.md`.
-- Sem novas dependências, mudanças de schema ou mudanças de ambiente. Registros de integração foram revertidos; dados de demonstração preservados.
-
-## Como retomar uma sessão
-
-1. Ler `AGENTS.md` (regras estáveis) e este arquivo.
-2. Conferir com o git: `git branch --show-current`, `git status`, `git log --oneline -10`.
-3. Ler `docs/plano-construcao.md` para o item "Próximo passo".
-4. Apresentar o plano do checkpoint e aguardar aprovação antes de alterar qualquer arquivo.
+- Sistema e documentação prontos até 20/11/2026; apresentação em 24/11/2026. Calendário no plano.
+- Não criar novos relatórios por checkpoint; atualizar STATUS/plano/TESTES e documentos afetados. Relatórios históricos preservados.
+- Modelos institucionais e feedback estão em docs/referencias/institucional, local e ignorada pelo Git. Conferir modelo aplicável e dados de capa/fontes/formato da apresentação. Documentação acadêmica final editável/PDF, API completa, prints e roteiro ainda pendentes.

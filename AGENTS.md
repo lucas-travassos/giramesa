@@ -26,7 +26,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 - Desenvolvimento em Windows, com MySQL pelo XAMPP e comandos em Git Bash. Front (Vite, porta 5173) na raiz do repositório; API (Express, porta 3001 por padrão, configurável via `PORT`) em `backend/`. A 3000 pode estar ocupada por outros projetos (ex.: containers Docker), o que já causou erro de CORS ao enviar o login para a API errada.
 - Front e back rodam em **terminais separados, ao mesmo tempo**.
 - Para executar: MySQL ligado → `npm run dev` em `backend/` (confirmar "Conexao com MySQL estabelecida.") → `npm run dev` na raiz → abrir `http://localhost:5173`. O token JWT vale 8h.
-- Usuários de demonstração: `admin@giramesa.com`, `caixa@giramesa.com`, `garcom@giramesa.com`. A senha é definida pelo script `npm run seed:senhas` (ver `backend/`) e será documentada no README como dado de demonstração.
+- Usuários de demonstração: `admin@giramesa.com`, `caixa@giramesa.com`, `garcom@giramesa.com`. Em instalações novas, `docs/banco/instalacao-inicial.sql` cria essas contas com hash bcrypt da senha pública fictícia `123456`, documentada no README. O script `npm run seed:senhas` (ver `backend/`) redefine a senha de todas as contas do banco selecionado para esse valor; não é necessário após a importação inicial.
 - Após criar arquivos por comando de terminal, confira o conteúdo com `cat`.
 
 ## 4. Regras de trabalho
@@ -49,10 +49,14 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 
 1. `git status` e leitura do necessário → **plano** → aprovação.
 2. Implementação.
-3. **Roteiro de teste** passo a passo, cobrindo perfis, validações e falha de rede (backend desligado).
+3. **Roteiro de teste** passo a passo em `docs/TESTES.md`, cobrindo os cenários afetados, perfis, validações e falha de rede (backend desligado). Reexecutar o conjunto crítico antes de integrar uma entrega na main.
 4. O product owner testa e responde; ajustes e reteste.
 5. **Somente quando solicitado**, faça commit(s) e **`git push` imediato**, informando os hashes.
-6. **Fechamento do checkpoint (parte da definição de "pronto"):** no mesmo commit `docs:`, (a) gere `docs/checkpoints/<id>-<slug>.md` (o que foi feito, por quê, arquivos, testes, commits); (b) **reescreva `docs/STATUS.md`** com o estado real; (c) marque o item em `docs/plano-construcao.md`; (d) atualize a documentação afetada (seção 10). Sem isso o checkpoint não está fechado. Antes do push, mostre `git show --stat` para o product owner conferir.
+6. **Fechamento do checkpoint (parte da definição de "pronto"):** no mesmo commit `docs:`, (a) **reescreva `docs/STATUS.md`** com o estado real; (b) atualize a última execução dos cenários afetados em `docs/TESTES.md`; (c) marque o item em `docs/plano-construcao.md`; (d) atualize a documentação técnica afetada (seção 10). O resumo do que mudou, por quê, validação e limites fica no commit/PR. **Não criar um novo relatório por checkpoint.** Preservar os relatórios históricos já versionados em `docs/checkpoints/`. Sem validação e esses registros o checkpoint não está fechado. Antes do push, mostre `git show --stat` para o product owner conferir.
+
+### Trabalho com agentes paralelos
+
+Quando autorizado no plano, distribuir escopos independentes entre implementação, qualidade e documentação. O agente principal integra as entregas, mantém STATUS/plano/TESTES e executa commits e pushes. Cada agente recebe arquivos de responsabilidade definidos; evitar edição simultânea do mesmo arquivo e banco de testes compartilhado. A revisão independente não substitui o aceite funcional do product owner. Não criar arquivos de instruções ou relatórios por agente automaticamente.
 
 ## 5. Padrão de commits
 
@@ -61,6 +65,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 - Mudou back e front no mesmo checkpoint: **dois commits**, backend primeiro.
 - Nunca inclua `git commit` em bloco de construção ou de teste; commit só após validação e pedido.
 - Todo commit é seguido de `git push`. Sem `--force`, sem reescrever histórico, sem `--amend` após o push.
+- Ao entregar um PR, informar também o título sugerido para o commit de merge, no padrão do projeto e com o número do PR, por exemplo: `feat: integra dashboard real e documentacao (#1)`.
 - Exemplo de referência: `feat: cria checkout com divisao de conta, pagamento e fechamento de mesa`.
 
 ## 6. Arquitetura (confirme lendo o código)
@@ -94,7 +99,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 
 ## 8. Estado atual
 
-O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, curto, nunca acumulativo) e o roteiro em `docs/plano-construcao.md`. Não duplique estado neste arquivo: ele guarda apenas regras estáveis. Quando algo vira regra permanente, migre do `STATUS.md` para a seção 7.
+O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, curto, nunca acumulativo), o roteiro em `docs/plano-construcao.md` e os cenários e resultados atuais em `docs/TESTES.md`. O histórico de alterações fica no Git e nos PRs; os relatórios antigos de `docs/checkpoints/` são apenas arquivo. Não duplique estado neste arquivo: ele guarda apenas regras estáveis. Quando algo vira regra permanente, migre do `STATUS.md` para a seção 7.
 
 **Handoff:** quando o product owner pedir "faça o handoff", releia o git e reescreva o `STATUS.md` com o estado real, para que uma nova sessão retome sem perda de contexto.
 
@@ -112,4 +117,5 @@ O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, c
 - Tudo fica em `docs/` (índice e checklist em `docs/README.md`).
 - Quando um checkpoint altera regra, tela, tabela ou endpoint, atualize o documento correspondente **no mesmo checkpoint**, em commit `docs:` separado.
 - Nunca invente resultados, testes, prints ou referências: documente apenas o que foi implementado e testado.
+- Atualizar a mesma matriz `docs/TESTES.md` com a última execução de cada cenário, ambiente, resultado e referência de evidência. Não gerar arquivo de resultados por execução; consultar o histórico do Git quando necessário. Manter documentação acadêmica e técnica útil à entrega, sem duplicar o histórico dos PRs.
 - A documentação segue a ABNT (resumo, introdução, objetivos, caso de uso, DER, telas, metodologia, resultados, conclusão, referências). O projeto será apresentado: mantenha sempre uma versão demonstrável com dados de demonstração.

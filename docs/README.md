@@ -2,12 +2,25 @@
 
 Índice dos documentos técnicos, materiais acadêmicos e evidências de validação do GiraMesa, utilizados no trabalho em formato ABNT e na apresentação do sistema.
 
+Dados de demonstração: [execução de `seed:demo` e critérios dos dados](banco/seed-demo.md). Resultados e roteiro de validação no [checkpoint 12.1](checkpoints/12.1-seed-demonstracao.md).
+
+Instalação nova: [README do projeto](../README.md) e [SQL de estrutura e dados iniciais fictícios](banco/instalacao-inicial.sql). Roteiros, resultados atuais e limites das evidências em [TESTES.md](TESTES.md).
+
+## Documentos de trabalho
+
+- [STATUS.md](STATUS.md): estado real, bloqueios e próxima ação; curto e reescrito.
+- [Plano de construção](plano-construcao.md): prioridades e calendário até a entrega de 20/11/2026 e apresentação de 24/11/2026.
+- [TESTES.md](TESTES.md): uma matriz viva com roteiros reutilizáveis e a última execução registrada por cenário.
+- Git e PRs: histórico das mudanças e revisões. Os relatórios já versionados em `checkpoints/` são mantidos como arquivo; não são exigidos novos relatórios por checkpoint.
+
 ## Estrutura
 
 ```
 docs/
 ├── README.md                  (este arquivo: índice e checklist)
 ├── plano-construcao.md        (checkpoints e commits)
+├── STATUS.md                  (estado atual e retomada)
+├── TESTES.md                  (roteiros e resultados atuais)
 ├── abnt/                      (textos do trabalho: resumo, introdução, objetivos, caso de uso, DER, telas...)
 ├── diagramas/                 (caso de uso, DER: imagens e arquivos-fonte)
 ├── telas/
@@ -15,7 +28,7 @@ docs/
 │   └── mobile/                (prints)
 ├── banco/                     (scripts SQL e schema atual)
 ├── api/                       (documentação da API e coleção do Thunder Client)
-├── checkpoints/               (resumo de cada checkpoint + histórico de commits)
+├── checkpoints/               (relatórios históricos já versionados)
 ├── apresentacao/              (slides, roteiro, vídeo demo)
 ├── referencias/               (material de aula, links e fontes consultadas)
 └── codex/                     (prompt inicial e modelos de solicitação)
@@ -24,9 +37,10 @@ docs/
 ## Checklist de materiais e evidências da entrega
 
 ### A. Informações da faculdade (definem o formato do trabalho)
-- [ ] Manual ou template de trabalho acadêmico da UniSENAI e exigências do professor (capa, folha de rosto, sumário, estrutura mínima) → `referencias/`
+- [ ] Conferir os modelos UniSENAI e o feedback do professor já disponíveis em `referencias/institucional/` e definir o modelo aplicável (capa, sumário, estrutura mínima); essa pasta permanece local e ignorada pelo Git
 - [ ] Rubrica ou critérios de avaliação (peso de código, documentação e apresentação) → `referencias/`
-- [ ] Data de entrega, data da apresentação, tempo de fala e formato (slides, demo ao vivo, vídeo) → anotar em `apresentacao/informacoes.md`
+- [x] Datas: entrega em 20/11/2026 e apresentação em 24/11/2026; calendário no plano de construção
+- [ ] Tempo de fala e formato da apresentação (slides, demo ao vivo, vídeo)
 - [ ] Dados da capa: nome(s) do(s) aluno(s), curso, turma, unidade, professor orientador, cidade, ano → `abnt/dados-capa.md`
 - [ ] Confirmação do nome definitivo do projeto (GiraMesa) e logo, se existir → `diagramas/` ou `apresentacao/`
 
@@ -41,9 +55,9 @@ docs/
 - [ ] **Prints das telas**, com 1 por tela no desktop e, no mínimo, salão, pedido e checkout no mobile. Padrão de nome (segue a numeração de figuras já usada): `fig-03-login.png`, `fig-04-salao.png`, `fig-05-pedido.png`, `fig-06-checkout.png`, `fig-07-usuarios.png`, `fig-08-mesas.png`, `fig-09-produtos.png`, `fig-10-dashboard.png`; versões mobile com sufixo `-mobile`. Fazer os prints **depois** de rodar o `seed:demo` e da identidade visual (checkpoints 12.1 e 13.5), para as telas aparecerem cheias e finais → `telas/desktop/` e `telas/mobile/`
 - [ ] Coleção do Thunder Client exportada → `api/`
 - [ ] Schema atual do banco, sem dados (ex.: `mysqldump --no-data`, com o nome do banco do projeto) → `banco/schema-atual.sql`. Nunca incluir senhas, `.env` ou dumps com dados reais
-- [ ] Saída de `git log --oneline` (histórico dos checkpoints) → `checkpoints/historico-commits.txt`
+- [ ] Referenciar commits e PRs relevantes na documentação, sem copiar o histórico inteiro para outro arquivo
 - [ ] Imagem atualizada do **DER final** (com `categorias`, `pagamentos` e eventuais ajustes) e do **caso de uso** revisado → `diagramas/`
-- [ ] Resultados dos testes executados em cada checkpoint, com cenário, resultado esperado e resultado observado → `checkpoints/`
+- [ ] Resultados dos testes, com cenário, ambiente, resultado esperado, última execução e evidência → `TESTES.md`; utilizar essa matriz na seção de metodologia/resultados do trabalho
 - [ ] (Opcional) vídeo curto de demonstração do fluxo completo → `apresentacao/`
 
 ### D. Referências
