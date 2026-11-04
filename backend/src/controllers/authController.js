@@ -1,9 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Usuario } = require('../models');
+const { validar } = require('../validations/schemas');
 
 async function login(req, res) {
-  const { email, senha } = req.body;
+  const { email, senha } = validar(req.body, 'login');
 
   if (!email || !senha) {
     return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
@@ -40,7 +41,7 @@ async function login(req, res) {
       },
     });
   } catch (err) {
-    return res.status(500).json({ erro: 'Erro interno ao autenticar.' });
+    throw err;
   }
 }
 

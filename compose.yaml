@@ -1,0 +1,36 @@
+name: giramesa
+
+services:
+  db:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3309:3306"
+    environment:
+      MYSQL_DATABASE: giramesa
+      MYSQL_USER: giramesa_app
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_app_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+    secrets:
+      - mysql_app_password
+      - mysql_root_password
+      - mysql_root_client
+    volumes:
+      - dados_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+secrets:
+  mysql_app_password:
+    file: ./.secrets.local/mysql-app-password
+  mysql_root_password:
+    file: ./.secrets.local/mysql-root-password
+  mysql_root_client:
+    file: ./.secrets.local/mysql-root-client.cnf
+
+volumes:
+  dados_mysql:

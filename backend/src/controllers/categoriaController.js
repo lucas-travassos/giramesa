@@ -1,3 +1,4 @@
+const { validar } = require('../validations/schemas');
 const { Categoria, Produto } = require('../models');
 
 async function listar(req, res) {
@@ -12,7 +13,7 @@ async function buscarPorId(req, res) {
 }
 
 async function criar(req, res) {
-  const { nome } = req.body;
+  const { nome } = validar(req.body, 'categoria');
   if (!nome) return res.status(400).json({ erro: 'Nome da categoria é obrigatório.' });
 
   try {
@@ -22,7 +23,7 @@ async function criar(req, res) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ erro: 'Já existe uma categoria com esse nome.' });
     }
-    res.status(500).json({ erro: 'Erro ao criar categoria.' });
+    throw err;
   }
 }
 
@@ -30,14 +31,15 @@ async function atualizar(req, res) {
   const categoria = await Categoria.findByPk(req.params.id);
   if (!categoria) return res.status(404).json({ erro: 'Categoria não encontrada.' });
 
+  const dados = validar(req.body, 'categoria');
   try {
-    await categoria.update({ nome: req.body.nome });
+    await categoria.update(dados);
     res.json(categoria);
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ erro: 'Já existe uma categoria com esse nome.' });
     }
-    res.status(500).json({ erro: 'Erro ao atualizar categoria.' });
+    throw err;
   }
 }
 

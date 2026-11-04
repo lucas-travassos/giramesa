@@ -83,6 +83,7 @@ async function criarDadosDemo(transaction, agora = new Date()) {
       await ItemPedido.bulkCreate(consumos[indice].map(([produto, quantidade]) => ({
         pedido_id: pedido.pedido_id,
         produto_id: produtos[produto].produto_id,
+        nome_produto: produtos[produto].nome,
         quantidade,
         preco_unitario: (CARDAPIO[produto].centavos / 100).toFixed(2),
         observacao: marcador,
