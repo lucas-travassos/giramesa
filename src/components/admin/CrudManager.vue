@@ -2,32 +2,23 @@
   <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4 mb-0">{{ titulo }}</h1>
-      <button class="btn btn-primary btn-sm" @click="abrirNovo">
-        <i class="bi bi-plus-lg me-1"></i>Novo
+      <button class="btn btn-primary" :disabled="carregando || !!erro" @click="abrirNovo">
+        <i aria-hidden="true" class="bi bi-plus-lg me-1"></i>Novo
       </button>
     </div>
 
-    <div v-if="sucesso" class="alert alert-success alert-dismissible">
+    <div v-if="sucesso" class="alert alert-success alert-dismissible" role="status">
       {{ sucesso }}
-      <button type="button" class="btn-close" @click="sucesso = ''"></button>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Fechar mensagem"
+        @click="sucesso = ''"
+      ></button>
     </div>
 
-    <div v-if="carregando && !items.length" class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-    </div>
-
-    <template v-else>
-      <div
-        v-if="erro"
-        class="alert alert-danger d-flex justify-content-between align-items-center"
-      >
-        <span>{{ erro }}</span>
-        <button class="btn btn-sm btn-outline-danger" @click="$emit('recarregar')">
-          Tentar de novo
-        </button>
-      </div>
-
-      <div v-if="!erro || items.length" class="table-responsive">
+    <EstadoConteudo :carregando="carregando" :erro="erro" @recarregar="$emit('recarregar')">
+      <div class="table-responsive">
         <table class="table table-hover align-middle bg-white shadow-sm">
           <thead class="table-light">
             <tr>
@@ -50,18 +41,20 @@
               <td class="text-end">
                 <button
                   class="btn btn-sm btn-outline-secondary me-1"
+                  :aria-label="`Editar ${item.nome ?? item.numero ?? item.id}`"
                   title="Editar"
                   @click="abrirEdicao(item)"
                 >
-                  <i class="bi bi-pencil"></i>
+                  <i aria-hidden="true" class="bi bi-pencil"></i>
                 </button>
                 <button
                   v-if="!inativo(item)"
                   class="btn btn-sm btn-outline-danger"
                   :title="rotuloRemover"
+                  :aria-label="`${rotuloRemover} ${item.nome ?? item.numero ?? item.id}`"
                   @click="pedirRemocao(item)"
                 >
-                  <i class="bi" :class="iconeRemover"></i>
+                  <i aria-hidden="true" class="bi" :class="iconeRemover"></i>
                 </button>
               </td>
             </tr>
@@ -73,81 +66,80 @@
           </tbody>
         </table>
       </div>
-    </template>
+    </EstadoConteudo>
 
-    <!-- Modal de cadastro/edicao -->
-    <div v-if="modalAberto" class="modal d-block" style="background: rgba(0,0,0,0.5);">
-      <div class="modal-dialog">
-        <form class="modal-content" novalidate @submit.prevent="salvar">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ editando ? 'Editar' : 'Novo' }} — {{ titulo }}</h5>
-            <button type="button" class="btn-close" @click="fecharModal"></button>
-          </div>
-          <div class="modal-body">
-            <slot name="form" :item="formData" :editando="editando"></slot>
-
-            <div v-if="errosForm.length" class="alert alert-danger py-2 small mt-3 mb-0">
-              <ul class="mb-0 ps-3">
-                <li v-for="msg in errosForm" :key="msg">{{ msg }}</li>
-              </ul>
-            </div>
-            <div v-if="erroApi" class="alert alert-danger py-2 small mt-3 mb-0">
-              {{ erroApi }}
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              :disabled="salvando"
-              @click="fecharModal"
-            >
-              Cancelar
-            </button>
-            <button type="submit" class="btn btn-primary" :disabled="salvando">
-              <span v-if="salvando" class="spinner-border spinner-border-sm me-2"></span>
-              Salvar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Confirmacao de remocao/inativacao -->
-    <div
-      v-if="itemParaRemover"
-      class="modal d-block"
-      style="background: rgba(0,0,0,0.5);"
+    <DialogoModal
+      v-if="modalAberto"
+      :titulo="`${editando ? 'Editar' : 'Novo'} — ${titulo}`"
+      :ocupado="salvando"
+      @fechar="fecharModal"
     >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p class="mb-0">{{ textoConfirmacao(itemParaRemover) }}</p>
-            <div v-if="erroRemocao" class="alert alert-danger py-2 small mt-3 mb-0">
-              {{ erroRemocao }}
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              class="btn btn-outline-secondary"
-              :disabled="removendo"
-              @click="itemParaRemover = null"
-            >
-              Cancelar
-            </button>
-            <button class="btn btn-danger" :disabled="removendo" @click="confirmarRemocao">
-              <span v-if="removendo" class="spinner-border spinner-border-sm me-2"></span>
-              {{ rotuloRemover }}
-            </button>
-          </div>
+      <form novalidate :aria-busy="salvando" @submit.prevent="salvar">
+        <div class="modal-body">
+          <fieldset :disabled="salvando">
+            <slot name="form" :item="formData" :editando="editando"></slot>
+          </fieldset>
+          <p
+            v-if="tentouSalvar && Object.keys(errosForm).length"
+            class="text-danger small"
+            role="alert"
+          >
+            Confira os campos destacados antes de salvar.
+          </p>
+          <div v-if="erroApi" class="alert alert-danger mt-3 mb-0" role="alert">{{ erroApi }}</div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            :disabled="salvando"
+            @click="fecharModal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" :disabled="salvando">
+            <span
+              v-if="salvando"
+              class="spinner-border spinner-border-sm me-2"
+              aria-hidden="true"
+            ></span>
+            {{ salvando ? 'Salvando…' : 'Salvar' }}
+          </button>
+        </div>
+      </form>
+    </DialogoModal>
+    <DialogoModal
+      v-if="itemParaRemover"
+      :titulo="rotuloRemover + ' registro'"
+      :ocupado="removendo"
+      @fechar="itemParaRemover = null"
+    >
+      <div class="modal-body">
+        <p class="mb-0">{{ textoConfirmacao(itemParaRemover) }}</p>
+        <div v-if="erroRemocao" class="alert alert-danger mt-3 mb-0" role="alert">
+          {{ erroRemocao }}
         </div>
       </div>
-    </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-outline-secondary"
+          :disabled="removendo"
+          @click="itemParaRemover = null"
+        >
+          Cancelar
+        </button>
+        <button class="btn btn-danger" :disabled="removendo" @click="confirmarRemocao">
+          {{ removendo ? 'Aguarde…' : rotuloRemover }}
+        </button>
+      </div>
+    </DialogoModal>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, provide, nextTick, onBeforeUnmount } from 'vue'
+import EstadoConteudo from '../EstadoConteudo.vue'
+import DialogoModal from '../DialogoModal.vue'
 import { mensagemErro } from '../../utils/erro'
 
 const props = defineProps({
@@ -157,7 +149,7 @@ const props = defineProps({
   novoItem: { type: Function, required: true },
   carregando: { type: Boolean, default: false },
   erro: { type: String, default: '' },
-  validar: { type: Function, default: () => [] },
+  validar: { type: Function, default: () => ({}) },
   inativo: { type: Function, default: () => false },
   // funcoes assincronas: se a API recusar, o modal continua aberto com a mensagem
   aoSalvar: { type: Function, required: true },
@@ -176,7 +168,8 @@ defineEmits(['recarregar'])
 const modalAberto = ref(false)
 const editando = ref(false)
 const formData = ref({})
-const errosForm = ref([])
+const errosForm = ref({})
+const tentouSalvar = ref(false)
 const erroApi = ref('')
 const salvando = ref(false)
 
@@ -186,6 +179,13 @@ const removendo = ref(false)
 
 const sucesso = ref('')
 let timer = null
+onBeforeUnmount(() => clearTimeout(timer))
+function validarCampo(nome) {
+  const mensagem = props.validar(formData.value, editando.value)[nome]
+  if (mensagem) errosForm.value[nome] = mensagem
+  else delete errosForm.value[nome]
+}
+provide('formularioCadastro', { erros: errosForm, validarCampo })
 
 function formatar(col, item) {
   return col.format ? col.format(item[col.key]) : item[col.key]
@@ -200,7 +200,8 @@ function avisarSucesso(texto) {
 function abrirModal(dados, emEdicao) {
   formData.value = dados
   editando.value = emEdicao
-  errosForm.value = []
+  errosForm.value = {}
+  tentouSalvar.value = false
   erroApi.value = ''
   modalAberto.value = true
 }
@@ -218,8 +219,14 @@ function fecharModal() {
 }
 
 async function salvar() {
+  if (salvando.value) return
+  tentouSalvar.value = true
   errosForm.value = props.validar(formData.value, editando.value)
-  if (errosForm.value.length) return
+  if (Object.keys(errosForm.value).length) {
+    await nextTick()
+    document.querySelector('[role="dialog"] [aria-invalid="true"]')?.focus()
+    return
+  }
 
   salvando.value = true
   erroApi.value = ''

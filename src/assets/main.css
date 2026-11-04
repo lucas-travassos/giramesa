@@ -1,5 +1,229 @@
-/* Estilos globais do GiraMesa - complementam o Bootstrap */
+/* Identidade do GiraMesa sobre a base Bootstrap. */
 body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, sans-serif;
+}
+:root {
+  --bs-primary: #176b46;
+  --bs-primary-rgb: 23, 107, 70;
+  --bs-link-color: #176b46;
+  --bs-link-hover-color: #104b31;
+  --bs-body-color: #24362d;
+  --bs-body-bg: #f5f7f4;
+  --bs-secondary-color: #56645d;
+  --bs-border-color: #d7e0d9;
+}
+.gm-navbar {
+  background: #164d36;
+}
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.gm-navbar .nav-link {
+  color: #e0ede5;
+  padding: 0.7rem;
+}
+.gm-navbar .nav-link:hover {
+  color: #fff;
+  background: #ffffff14;
+  border-radius: 0.5rem;
+}
+.card,
+.modal-content {
+  --bs-card-bg: #fff;
+  border-radius: 0.85rem;
+}
+.card {
+  --bs-card-border-color: #dde5df;
+}
+.card-title,
+h1 {
+  letter-spacing: -0.025em;
+}
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+.btn-primary,
+.btn-success {
+  --bs-btn-bg: #176b46;
+  --bs-btn-border-color: #176b46;
+  --bs-btn-hover-bg: #125437;
+  --bs-btn-hover-border-color: #125437;
+  --bs-btn-active-bg: #104b31;
+  --bs-btn-active-border-color: #104b31;
+  --bs-btn-disabled-bg: #176b46;
+  --bs-btn-disabled-border-color: #176b46;
+}
+.btn-outline-primary {
+  --bs-btn-color: #176b46;
+  --bs-btn-border-color: #176b46;
+  --bs-btn-hover-bg: #176b46;
+  --bs-btn-hover-border-color: #176b46;
+  --bs-btn-active-bg: #104b31;
+  --bs-btn-active-border-color: #104b31;
+  --bs-btn-disabled-color: #176b46;
+  --bs-btn-disabled-border-color: #176b46;
+}
+.nav-pills {
+  --bs-nav-pills-link-active-bg: #176b46;
+}
+.btn-outline-warning {
+  --bs-btn-color: #805700;
+  --bs-btn-border-color: #805700;
+  --bs-btn-hover-bg: #805700;
+  --bs-btn-hover-border-color: #805700;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: #805700;
+  --bs-btn-active-border-color: #805700;
+  --bs-btn-active-color: #fff;
+}
+.form-control,
+.form-select {
+  min-height: 44px;
+  background-color: #fff;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #176b46;
+  box-shadow: 0 0 0 0.2rem #176b4626;
+}
+.form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.btn-close {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 10px;
+}
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #a5570b;
+  outline-offset: 3px;
+}
+.min-w-0 {
+  min-width: 0;
+}
+.card-body,
+td,
+.alert,
+.navbar-brand,
+.item-pedido-nome {
+  overflow-wrap: anywhere;
+}
+.table {
+  --bs-table-bg: #fff;
+}
+.table th,
+.table td {
+  padding: 0.85rem;
+}
+.table td:last-child {
+  white-space: nowrap;
+}
+.table-responsive {
+  border-radius: 0.75rem;
+}
+.gm-modal {
+  background: #10291e99;
+}
+.gm-modal form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.gm-modal .modal-body {
+  overflow-y: auto;
+}
+.login-page {
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at top, #dce9dc, #f5f7f4 65%);
+}
+.pular-conteudo {
+  position: fixed;
+  left: 1rem;
+  top: -5rem;
+  z-index: 2000;
+  background: #fff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+.pular-conteudo:focus {
+  top: 1rem;
+}
+.categorias-pedido {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 0.4rem;
+  padding-bottom: 0.5rem;
+}
+.categorias-pedido .nav-link {
+  white-space: nowrap;
+  min-height: 44px;
+}
+.carrinho-pedido {
+  position: sticky;
+  top: 1rem;
+}
+.item-pedido-nome {
+  flex: 1 1 130px;
+}
+.resumo-carrinho {
+  background: #164d36;
+  color: #fff;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0.85rem 1rem;
+}
+.resumo-carrinho:hover,
+.resumo-carrinho:focus-visible {
+  background: #104b31;
+  color: #fff;
+}
+@media (max-width: 991.98px) {
+  .pedido-tela {
+    padding-bottom: 120px !important;
+  }
+  .carrinho-pedido {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 1020;
+    background: #fff;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -4px 20px #10291e26;
+  }
+  .detalhes-carrinho {
+    display: none;
+    max-height: 65dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .carrinho-pedido.aberto .detalhes-carrinho {
+    display: block;
+  }
+  .carrinho-pedido .card {
+    border-radius: 0;
+    border: 0;
+  }
+  .navbar-collapse {
+    padding: 0.5rem 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .mesa-card:hover {
+    transform: none !important;
+  }
 }

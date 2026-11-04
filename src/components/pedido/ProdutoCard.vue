@@ -1,22 +1,25 @@
 <template>
-  <div
-    class="card produto-card shadow-sm h-100"
-    role="button"
+  <button
+    :disabled="ocupado"
+    class="card produto-card shadow-sm h-100 w-100 text-start"
+    type="button"
+    :aria-label="`Adicionar ${produto.nome}, R$ ${produto.preco.toFixed(2)}`"
     @click="$emit('adicionar', produto)"
   >
-    <div class="card-body d-flex justify-content-between align-items-center">
-      <div>
-        <p class="mb-0 fw-semibold">{{ produto.nome }}</p>
+    <span class="card-body w-100 d-flex justify-content-between align-items-center">
+      <span class="min-w-0 me-3">
+        <span class="d-block fw-semibold">{{ produto.nome }}</span>
         <small class="text-muted">R$ {{ produto.preco.toFixed(2) }}</small>
-      </div>
-      <i class="bi bi-plus-circle-fill text-primary fs-4"></i>
-    </div>
-  </div>
+      </span>
+      <i aria-hidden="true" class="bi bi-plus-circle-fill text-primary fs-4"></i>
+    </span>
+  </button>
 </template>
 
 <script setup>
 defineProps({
   produto: { type: Object, required: true },
+  ocupado: Boolean,
 })
 defineEmits(['adicionar'])
 </script>

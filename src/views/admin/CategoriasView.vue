@@ -15,19 +15,25 @@
     @recarregar="categoriasStore.carregar"
   >
     <template #form="{ item, editando }">
-      <div class="mb-2">
-        <label class="form-label small">Nome da categoria</label>
-        <input v-model="item.nome" type="text" class="form-control" />
-        <p v-if="editando" class="small text-muted mt-1 mb-0">
-          Renomear altera o nome em todo o histórico. Para outro conceito, crie uma nova categoria.
-        </p>
-      </div>
+      <CampoFormulario
+        v-model="item.nome"
+        nome="nome"
+        rotulo="Nome da categoria"
+        maxlength="50"
+        :ajuda="
+          editando
+            ? 'Renomear altera a categoria exibida no histórico. Para outro conceito, crie uma nova categoria.'
+            : ''
+        "
+      />
     </template>
   </CrudManager>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import CampoFormulario from '../../components/admin/CampoFormulario.vue'
+import { erroTexto, somenteErros } from '../../utils/validacao'
 import { useCategoriasStore } from '../../stores/categorias'
 import CrudManager from '../../components/admin/CrudManager.vue'
 
@@ -40,7 +46,7 @@ function novoItem() {
 }
 
 function validar(c) {
-  return c.nome?.trim() ? [] : ['Informe o nome da categoria.']
+  return somenteErros({ nome: erroTexto(c.nome, 50, 'nome da categoria') })
 }
 
 function textoConfirmacao(c) {
