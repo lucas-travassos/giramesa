@@ -53,7 +53,7 @@ O PR #2 integrou 12.1–12.3 na main em 29/10/2026 (b29434b). A entrega seguinte
 ### Escopo proposto do 12.4
 
 - A recuperação validada já permite executar a cópia. Migrar para um ambiente definitivo e resolver a configuração persistente de VITE_API_URL, validando reinício sem variável temporária. Não confundir recuperação com migração definitiva.
-- **Destino definido:** opção B, somente MySQL 8.4.13 em Docker Compose, volume persistente e porta 127.0.0.1:3309. Node/Vite locais em C:/Projetos/giramesa. Docker operacional após atualização para 4.97.0; destino importado e validado por scripts contra o dump externo. A porta 3308 passou a pertencer ao EstoqueFacil; origem online não revalidada. Aplicação nova usa somente 3309. Aceite visual mínimo aprovado em 29/10; publicação ainda pendente.
+- **Destino definido:** opção B, somente MySQL 8.4.13 em Docker Compose, volume persistente e porta 127.0.0.1:3309. Node/Vite locais em C:/Projetos/giramesa. Docker operacional após atualização para 4.97.0; destino importado e validado por scripts contra o dump externo. A porta 3308 passou a pertencer ao EstoqueFacil; origem online não revalidada. Aplicação nova usa somente 3309. Aceite visual mínimo aprovado em 29/10; publicação concluída em d37f35f/15205f3/9853202.
 - Preservar o serviço MySQL 8.0 existente na porta 3307 e os bancos de outros projetos. Migrar os bancos identificados como GiraMesa por SQL; criar contas de serviço no destino, sem importar tabelas internas mysql.* entre MariaDB e MySQL.
 - Conferir restauração, conteúdo, permissões e totais antes de alterar o destino usado pela aplicação. Planejar retorno ao ambiente anterior caso a validação falhe.
 - Atualizar README, exemplos de ambiente e instruções de testes; manter `compose.yaml` com somente o serviço de banco. Não adicionar bibliotecas à aplicação para essa migração.
@@ -62,14 +62,16 @@ O PR #2 integrou 12.1–12.3 na main em 29/10/2026 (b29434b). A entrega seguinte
 
 ## Fase B — UX/UI dos fluxos de atendimento e administração
 
+13.1–13.6 implementados em conjunto sobre 9853202 e publicados em 828127a, com testes executados e aceite funcional informado pelo responsável pelo produto em 04/11/2026. Revisão pelo navegador em 04/11: formulários/foco, 360×800 e 390×844, envio/quitação e falha/recuperação da API. Interface descrita em telas/README.md; resultados e limites em TESTES. Aceite e fechamento documental registrados em TESTES/STATUS. Regressão crítica pré-merge pendente: timeout do Docker antes do primeiro grupo em duas tentativas de 04/11.
+
 | ID | Escopo | Teste esperado | Commit |
 |---|---|---|---|
-| 13.1 | Conferir e padronizar o feedback existente com Bootstrap, reutilizando modais/alerts. A inspeção de 27/10 não encontrou alert() ou confirm(); evitar recriar o que já funciona | Ações relevantes mostram sucesso/erro e remoções têm confirmação; validar antes de implementar novos componentes | Definir conforme diferenças encontradas |
-| 13.2 | Componentes padrão de carregamento, vazio e erro de rede, aplicados em todas as telas | Spinner ao carregar; mensagem clara com backend desligado | `feat: padroniza estados de carregamento, vazio e erro` |
-| 13.3 | Validações de formulário no front (nome vazio, preço negativo, e-mail inválido) espelhando o backend | Entradas inválidas bloqueadas com mensagem por campo | `feat: adiciona validacoes de formulario nos cadastros` |
-| 13.4 | Responsividade mobile do fluxo do garçom (pedido com carrinho fixo/colapsável, botões grandes) | Teste em 360px e 390px: salão → pedido → envio | `feat: otimiza fluxo do garcom para mobile` |
-| 13.5 | Identidade visual: paleta, tipografia, logo, cores de status das mesas | Visual consistente em todas as telas | `feat: aplica identidade visual do giramesa` |
-| 13.6 | Acessibilidade básica: contraste, `aria-label`, foco e teclado | Navegação por Tab nas telas principais | `feat: melhora acessibilidade das telas principais` |
+| 13.1 ✅ | Conferir e padronizar o feedback existente com Bootstrap, reutilizando modais/alerts. A inspeção de 27/10 não encontrou alert() ou confirm(); evitar recriar o que já funciona | Ações relevantes mostram sucesso/erro e remoções têm confirmação; validar antes de implementar novos componentes | `828127a` |
+| 13.2 ✅ | Componentes padrão de carregamento, vazio e erro de rede, aplicados em todas as telas | Spinner ao carregar; mensagem clara com backend desligado | `828127a` |
+| 13.3 ✅ | Validações de formulário no front (nome vazio, preço negativo, e-mail inválido) espelhando o backend | Entradas inválidas bloqueadas com mensagem por campo | `828127a` |
+| 13.4 ✅ | Responsividade mobile do fluxo do garçom (pedido com carrinho fixo/colapsável, botões grandes) | Teste em 360px e 390px: salão → pedido → envio | `828127a` |
+| 13.5 ✅ | Identidade visual: paleta, tipografia, logo, cores de status das mesas | Visual consistente em todas as telas | `828127a` |
+| 13.6 ✅ | Acessibilidade básica: contraste, `aria-label`, foco e teclado | Navegação por Tab nas telas principais | `828127a` |
 
 ## Fase C — Segurança do fluxo financeiro e robustez
 
