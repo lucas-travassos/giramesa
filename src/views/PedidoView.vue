@@ -163,7 +163,7 @@ async function carregarConsumo() {
   const pedido = await pedidosStore.buscarPedidoAberto(mesaId)
   consumidos.value = (pedido?.ItemPedidos ?? []).map((i) => ({
     id: i.item_id,
-    nome: i.Produto?.nome ?? 'Produto',
+    nome: i.nome_produto ?? i.Produto?.nome ?? 'Produto',
     quantidade: i.quantidade,
     preco: parseFloat(i.preco_unitario),
   })).sort((a, b) => a.id - b.id)

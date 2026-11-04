@@ -169,7 +169,7 @@ const itens = computed(() =>
   (pedido.value?.ItemPedidos ?? [])
     .map((i) => ({
       id: i.item_id,
-      nome: i.Produto?.nome ?? 'Produto',
+      nome: i.nome_produto ?? i.Produto?.nome ?? 'Produto',
       quantidade: i.quantidade,
       preco: parseFloat(i.preco_unitario),
     }))
