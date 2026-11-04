@@ -17,39 +17,43 @@
     @recarregar="mesasStore.carregar"
   >
     <template #form="{ item, editando }">
-      <div class="mb-2">
-        <label class="form-label small">Número da mesa</label>
-        <input
-          v-model.number="item.numero"
-          type="number"
-          min="1"
-          class="form-control"
-          :disabled="editando && item.temHistorico"
-        />
-        <p v-if="editando && item.temHistorico" class="small text-muted mt-1 mb-0">
-          Esta mesa já tem histórico de pedidos, então o número não pode ser alterado.
-          Para trocá-lo, inative a mesa e cadastre uma nova.
-        </p>
-      </div>
-
-      <div v-if="editando" class="mb-2">
-        <template v-if="LIVRES.includes(item.status)">
-          <label class="form-label small">Situação</label>
-          <select v-model="item.status" class="form-select">
-            <option value="disponivel">Ativa (disponível)</option>
-            <option value="inativa">Inativa</option>
-          </select>
-        </template>
-        <p v-else class="small text-muted mb-0">
-          Mesa em atendimento: a situação só muda pelo atendimento (pedido e checkout).
-        </p>
-      </div>
+      <CampoFormulario
+        v-model="item.numero"
+        nome="numero"
+        rotulo="Número da mesa"
+        tipo="number"
+        inputmode="numeric"
+        min="1"
+        max="2147483647"
+        step="1"
+        :disabled="editando && item.temHistorico"
+        :ajuda="
+          editando && item.temHistorico
+            ? 'Mesa com histórico: o número é preservado. Para trocá-lo, inative e cadastre outra mesa.'
+            : ''
+        "
+      />
+      <CampoFormulario
+        v-if="editando && LIVRES.includes(item.status)"
+        v-model="item.status"
+        nome="status"
+        rotulo="Situação"
+        tipo="select"
+      >
+        <option value="disponivel">Ativa (disponível)</option>
+        <option value="inativa">Inativa</option>
+      </CampoFormulario>
+      <p v-else-if="editando" class="form-text">
+        Mesa em atendimento: a situação só muda pelo pedido e checkout.
+      </p>
     </template>
   </CrudManager>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import CampoFormulario from '../../components/admin/CampoFormulario.vue'
+import { erroInteiro, somenteErros } from '../../utils/validacao'
 import { useMesasStore } from '../../stores/mesas'
 import { STATUS_MESA } from '../../utils/statusMesa'
 import CrudManager from '../../components/admin/CrudManager.vue'
@@ -74,8 +78,7 @@ function novoItem() {
 }
 
 function validar(m) {
-  const n = Number(m.numero)
-  return Number.isInteger(n) && n >= 1 ? [] : ['Informe um número de mesa inteiro, maior que zero.']
+  return somenteErros({ numero: erroInteiro(m.numero) })
 }
 
 function textoConfirmacao(m) {

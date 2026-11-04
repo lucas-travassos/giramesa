@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { lerSessao, limparSessao } from './session'
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_URL })
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+})
 
 // Anexa o token JWT em toda requisicao
 api.interceptors.request.use((config) => {

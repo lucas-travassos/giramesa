@@ -17,47 +17,59 @@
     @recarregar="usuariosStore.carregar"
   >
     <template #form="{ item, editando }">
-      <div class="mb-2">
-        <label class="form-label small">Nome</label>
-        <input v-model="item.nome" type="text" class="form-control" />
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">E-mail</label>
-        <input v-model="item.email" type="email" class="form-control" />
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">
-          {{ editando ? 'Nova senha (opcional)' : 'Senha' }}
-        </label>
-        <input
-          v-model="item.senha"
-          type="password"
-          class="form-control"
-          autocomplete="new-password"
-          :placeholder="editando ? 'Deixe em branco para manter a atual' : 'Mínimo de 6 caracteres'"
-        />
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">Perfil</label>
-        <select v-model="item.nivel_acesso" class="form-select">
-          <option v-for="(rotulo, valor) in PERFIS" :key="valor" :value="valor">
-            {{ rotulo }}
-          </option>
-        </select>
-      </div>
-      <div v-if="editando" class="mb-2">
-        <label class="form-label small">Status</label>
-        <select v-model="item.status" class="form-select">
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-        </select>
-      </div>
+      <CampoFormulario
+        v-model="item.nome"
+        nome="nome"
+        rotulo="Nome"
+        maxlength="100"
+        autocomplete="name"
+      />
+      <CampoFormulario
+        v-model="item.email"
+        nome="email"
+        rotulo="E-mail"
+        tipo="email"
+        maxlength="150"
+        autocomplete="email"
+      />
+      <CampoFormulario
+        v-model="item.senha"
+        nome="senha"
+        :rotulo="editando ? 'Nova senha (opcional)' : 'Senha'"
+        tipo="password"
+        autocomplete="new-password"
+        :ajuda="
+          editando
+            ? 'Deixe em branco para manter a senha atual.'
+            : 'Mínimo de 6 caracteres; até 72 bytes.'
+        "
+      />
+      <CampoFormulario
+        v-model="item.nivel_acesso"
+        nome="nivel_acesso"
+        rotulo="Perfil"
+        tipo="select"
+      >
+        <option v-for="(rotulo, valor) in PERFIS" :key="valor" :value="valor">{{ rotulo }}</option>
+      </CampoFormulario>
+      <CampoFormulario
+        v-if="editando"
+        v-model="item.status"
+        nome="status"
+        rotulo="Situação"
+        tipo="select"
+      >
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+      </CampoFormulario>
     </template>
   </CrudManager>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import CampoFormulario from '../../components/admin/CampoFormulario.vue'
+import { erroTexto, erroEmail, erroSenha, somenteErros } from '../../utils/validacao'
 import { useUsuariosStore } from '../../stores/usuarios'
 import CrudManager from '../../components/admin/CrudManager.vue'
 
@@ -82,12 +94,11 @@ function novoItem() {
 }
 
 function validar(u, editando) {
-  const erros = []
-  if (!u.nome?.trim()) erros.push('Informe o nome.')
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((u.email ?? '').trim())) erros.push('Informe um e-mail válido.')
-  if (!editando && !u.senha) erros.push('Informe a senha.')
-  if (u.senha && u.senha.length < 6) erros.push('A senha deve ter no mínimo 6 caracteres.')
-  return erros
+  return somenteErros({
+    nome: erroTexto(u.nome, 100),
+    email: erroEmail(u.email),
+    senha: erroSenha(u.senha, editando),
+  })
 }
 
 function textoConfirmacao(u) {

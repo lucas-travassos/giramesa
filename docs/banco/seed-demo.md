@@ -12,7 +12,7 @@ O comando usa a configuração local do backend e se conecta diretamente ao MySQ
 
 Pré-requisitos: tabelas existentes com suporte a transações (InnoDB) e usuário `garcom@giramesa.com` ativo, com perfil `garcom`. A seed não cria usuários, redefine senhas ou executa sincronização de schema.
 
-Para uma instalação nova, preparar primeiro o banco vazio com o [SQL inicial](instalacao-inicial.sql), seguindo o [README do projeto](../../README.md). Não importar esse SQL no banco de desenvolvimento existente.
+Para uma instalação nova, preparar primeiro o banco vazio com o [SQL inicial](instalacao-inicial.sql), seguindo o [guia de instalação](../instalacao.md). Não importar esse SQL no banco de desenvolvimento existente.
 
 ## Conteúdo gerado
 

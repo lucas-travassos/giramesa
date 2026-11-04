@@ -1,3 +1,4 @@
+const { validar } = require('../validations/schemas');
 const { Produto, Categoria, ItemPedido } = require('../models');
 
 const MSG_VENDIDO =
@@ -23,7 +24,7 @@ async function buscarPorId(req, res) {
 }
 
 async function criar(req, res) {
-  const { categoria_id, nome, descricao, preco } = req.body;
+  const { categoria_id, nome, descricao, preco } = validar(req.body, 'produto');
   if (!categoria_id || !nome || preco === undefined) {
     return res.status(400).json({ erro: 'Categoria, nome e preço são obrigatórios.' });
   }
@@ -36,7 +37,7 @@ async function criar(req, res) {
     const produto = await Produto.create({ categoria_id, nome, descricao: descricao || '', preco });
     res.status(201).json(produto);
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao criar produto.' });
+    throw err;
   }
 }
 
@@ -44,11 +45,13 @@ async function atualizar(req, res) {
   const produto = await Produto.findByPk(req.params.id);
   if (!produto) return res.status(404).json({ erro: 'Produto não encontrado.' });
 
-  const { categoria_id, nome, descricao, preco, status } = req.body;
+  const { categoria_id, nome, descricao, preco, status } = validar(req.body, 'produtoEditar', true);
 
   if (preco !== undefined && !(Number(preco) > 0)) {
     return res.status(400).json({ erro: MSG_PRECO });
   }
+
+  if (categoria_id !== undefined && !(await Categoria.findByPk(categoria_id))) return res.status(400).json({ erro: 'Categoria inválida.' });
 
   // nome e categoria de um produto ja vendido fazem parte do historico: nao podem mudar
   const mudouNome = nome !== undefined && String(nome).trim() !== produto.nome;
@@ -66,7 +69,7 @@ async function atualizar(req, res) {
     await produto.update(dados);
     res.json(produto);
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao atualizar produto.' });
+    throw err;
   }
 }
 

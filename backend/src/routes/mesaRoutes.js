@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { validarId } = require('../validations/schemas');
+router.param('id', validarId);
 const verifyToken = require('../middlewares/verifyToken');
 const verificarPermissao = require('../middlewares/verificarPermissao');
 const mesaController = require('../controllers/mesaController');

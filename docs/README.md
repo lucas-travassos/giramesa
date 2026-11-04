@@ -4,9 +4,15 @@
 
 Dados de demonstração: [execução de `seed:demo` e critérios dos dados](banco/seed-demo.md). Resultados e roteiro de validação no [checkpoint 12.1](checkpoints/12.1-seed-demonstracao.md).
 
-Instalação nova: [README do projeto](../README.md) e [SQL de estrutura e dados iniciais fictícios](banco/instalacao-inicial.sql). Roteiros, resultados atuais e limites das evidências em [TESTES.md](TESTES.md).
+Instalação nova: [guia de instalação e execução](instalacao.md) e [SQL de estrutura e dados iniciais fictícios](banco/instalacao-inicial.sql). Roteiros, resultados atuais e limites das evidências em [TESTES.md](TESTES.md).
+
+Ambiente 12.4: banco em Docker Compose, Node/Vite locais. Preparação, persistência, migração e retorno no [guia de instalação](instalacao.md#migração-persistência-e-retorno). Importação, configuração, perfis HTTP e persistência aprovados por scripts; aceite visual mínimo aprovado em 29/10/2026. A porta antiga 3308 está ocupada pelo EstoqueFacil e não deve ser reutilizada sem identificar a origem. Situação em STATUS.
+
+Fluxo financeiro e contrato dos pedidos: [pedidos e pagamentos](api/pedidos.md). Proteções e schemas: [segurança e validações](api/seguranca-validacoes.md). Evolução do banco: [migrations e backup](banco/migracoes.md). Testes repetíveis: npm test em backend/, com resultado atual em TESTES.
 
 ## Documentos de trabalho
+
+Interface: [componentes, identidade e comportamento mobile](telas/README.md). A Fase B está implementada e aprovada pelo responsável pelo produto em 04/11/2026; evidências de revisão e roteiro em TESTES.
 
 - [STATUS.md](STATUS.md): estado real, bloqueios e próxima ação; curto e reescrito.
 - [Plano de construção](plano-construcao.md): prioridades e calendário até a entrega de 20/11/2026 e apresentação de 24/11/2026.
@@ -18,6 +24,7 @@ Instalação nova: [README do projeto](../README.md) e [SQL de estrutura e dados
 ```
 docs/
 ├── README.md                  (este arquivo: índice e checklist)
+├── instalacao.md              (ambiente local, execução e recuperação)
 ├── plano-construcao.md        (checkpoints e commits)
 ├── STATUS.md                  (estado atual e retomada)
 ├── TESTES.md                  (roteiros e resultados atuais)

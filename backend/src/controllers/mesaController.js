@@ -1,3 +1,4 @@
+const { validar } = require('../validations/schemas');
 const { Mesa, Pedido } = require('../models');
 
 const MSG_STATUS =
@@ -38,7 +39,7 @@ async function buscarPorId(req, res) {
 }
 
 async function criar(req, res) {
-  const { numero } = req.body;
+  const { numero } = validar(req.body, 'mesa');
   if (!numero) return res.status(400).json({ erro: 'Número da mesa é obrigatório.' });
 
   try {
@@ -48,7 +49,7 @@ async function criar(req, res) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ erro: 'Já existe uma mesa com esse número.' });
     }
-    res.status(500).json({ erro: 'Erro ao criar mesa.' });
+    throw err;
   }
 }
 
@@ -56,7 +57,7 @@ async function atualizar(req, res) {
   const mesa = await Mesa.findByPk(req.params.id);
   if (!mesa) return res.status(404).json({ erro: 'Mesa não encontrada.' });
 
-  const { numero, status } = req.body;
+  const { numero, status } = validar(req.body, 'mesaEditar', true);
 
   // ocupada/caixa pertencem ao fluxo de pedido e checkout: aqui so disponivel <-> inativa
   if (status && status !== mesa.status) {
@@ -79,7 +80,7 @@ async function atualizar(req, res) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ erro: 'Já existe uma mesa com esse número.' });
     }
-    res.status(500).json({ erro: 'Erro ao atualizar mesa.' });
+    throw err;
   }
 }
 

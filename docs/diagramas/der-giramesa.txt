@@ -1,6 +1,6 @@
 =====================================================================
-DER ATUALIZADO - GIRAMESA (modelo logico, 6 + 1 entidades = 7 tabelas)
-Base: giramesa-mysql-v2.sql + ajustes dos checkpoints do backend
+DER ATUALIZADO - GIRAMESA (7 tabelas de dominio + 1 tabela tecnica)
+Base: instalacao-inicial.sql + migration 001-historico-integridade.js
 Legenda: PK = chave primaria | FK = chave estrangeira | UQ = unico
          NN = nao nulo | N = aceita nulo
 =====================================================================
@@ -52,6 +52,7 @@ ITENS_PEDIDO
   produto_id       INT UNSIGNED FK -> produtos.produto_id, NN
   quantidade       INT          NN, padrao 1
   preco_unitario   DECIMAL(8,2) NN (preco praticado na venda)
+  nome_produto     VARCHAR(100) NN (nome preservado na venda)
   observacao       VARCHAR(255) N
 
 PAGAMENTOS
@@ -166,6 +167,7 @@ erDiagram
         int produto_id FK
         int quantidade
         decimal preco_unitario
+        string nome_produto
         string observacao
     }
     PAGAMENTOS {
@@ -188,13 +190,23 @@ DIFERENCAS EM RELACAO AO DER ANTERIOR (FIGURA 2)
   + PK renomeadas: pedidos_id -> pedido_id, itens_id -> item_id
   + ENUMs preenchidos com os valores reais
 
-PENDENTE (checkpoint 14.3, ainda NAO implementado)
+INTEGRIDADE E CONTROLE TECNICO
 ---------------------------------------------------------------------
-  ITENS_PEDIDO.nome_produto (snapshot do nome na hora da venda)
-  Atualizar este DER quando for implementado.
+  ITENS_PEDIDO.nome_produto: snapshot preenchido na venda.
+  Itens anteriores: backfill a partir do nome disponivel no cadastro atual.
+  Snapshot nao libera renomeacao/categoria de produtos vendidos pela API.
+  IX_PEDIDOS_STATUS_FECHAMENTO: pedidos(status, data_fechamento).
+  CHECKs: pedidos.valor_total >= 0; pagamentos.valor > 0;
+          itens_pedido.quantidade > 0; itens_pedido.preco_unitario > 0;
+          produtos.preco > 0.
+
+  SCHEMA_MIGRATIONS (tabela tecnica, sem relacionamento de dominio)
+    nome           VARCHAR(100) PK
+    checksum       CHAR(64) NN
+    aplicada_em    DATETIME NN, padrao agora
 
 CONFERENCIA ANTES DE USAR NO DOCUMENTO
 ---------------------------------------------------------------------
-  Este DER foi montado a partir do SQL v2 e das decisoes dos checkpoints.
+  Este DER descreve o SQL inicial e a migration 001, aplicada em 04/11/2026.
   Confira com o schema real (docs/banco/schema-atual.sql, via
   mysqldump --no-data) ou com os models do backend e ajuste se divergir.

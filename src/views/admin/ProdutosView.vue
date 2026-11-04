@@ -17,52 +17,66 @@
     @recarregar="carregarTudo"
   >
     <template #form="{ item, editando }">
-      <div class="mb-2">
-        <label class="form-label small">Nome</label>
-        <input
-          v-model="item.nome"
-          type="text"
-          class="form-control"
-          :disabled="editando && item.temHistorico"
-        />
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">Categoria</label>
-        <select
-          v-model="item.categoriaId"
-          class="form-select"
-          :disabled="editando && item.temHistorico"
-        >
-          <option v-for="cat in categoriasStore.categorias" :key="cat.id" :value="cat.id">
-            {{ cat.nome }}
-          </option>
-        </select>
-        <p v-if="editando && item.temHistorico" class="small text-muted mt-1 mb-0">
-          Este produto já foi vendido, então nome e categoria não podem ser alterados.
-          Para trocá-los, inative-o e cadastre um novo produto.
-        </p>
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">Descrição (opcional)</label>
-        <textarea v-model="item.descricao" rows="2" class="form-control"></textarea>
-      </div>
-      <div class="mb-2">
-        <label class="form-label small">Preço (R$)</label>
-        <input v-model.number="item.preco" type="number" step="0.01" min="0.01" class="form-control" />
-      </div>
-      <div v-if="editando" class="mb-2">
-        <label class="form-label small">Status</label>
-        <select v-model="item.status" class="form-select">
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-        </select>
-      </div>
+      <CampoFormulario
+        v-model="item.nome"
+        nome="nome"
+        rotulo="Nome"
+        maxlength="100"
+        :disabled="editando && item.temHistorico"
+      />
+      <CampoFormulario
+        v-model="item.categoriaId"
+        nome="categoriaId"
+        rotulo="Categoria"
+        tipo="select"
+        :disabled="editando && item.temHistorico"
+        :ajuda="
+          editando && item.temHistorico
+            ? 'Produto já vendido: nome e categoria preservados. Para trocá-los, inative e cadastre outro produto.'
+            : ''
+        "
+      >
+        <option value="" disabled>Selecione uma categoria</option>
+        <option v-for="cat in categoriasStore.categorias" :key="cat.id" :value="cat.id">
+          {{ cat.nome }}
+        </option>
+      </CampoFormulario>
+      <CampoFormulario
+        v-model="item.descricao"
+        nome="descricao"
+        rotulo="Descrição (opcional)"
+        tipo="textarea"
+        rows="2"
+        maxlength="65535"
+      />
+      <CampoFormulario
+        v-model="item.preco"
+        nome="preco"
+        rotulo="Preço (R$)"
+        tipo="number"
+        inputmode="decimal"
+        min="0.01"
+        max="999999.99"
+        step="0.01"
+      />
+      <CampoFormulario
+        v-if="editando"
+        v-model="item.status"
+        nome="status"
+        rotulo="Situação"
+        tipo="select"
+      >
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+      </CampoFormulario>
     </template>
   </CrudManager>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import CampoFormulario from '../../components/admin/CampoFormulario.vue'
+import { erroTexto, erroInteiro, erroDinheiro, somenteErros } from '../../utils/validacao'
 import { useProdutosStore } from '../../stores/produtos'
 import { useCategoriasStore } from '../../stores/categorias'
 import CrudManager from '../../components/admin/CrudManager.vue'
@@ -93,11 +107,14 @@ function novoItem() {
 }
 
 function validar(p) {
-  const erros = []
-  if (!p.nome?.trim()) erros.push('Informe o nome do produto.')
-  if (!p.categoriaId) erros.push('Selecione a categoria (cadastre uma em Categorias, se não houver).')
-  if (!(Number(p.preco) > 0)) erros.push('O preço deve ser maior que zero.')
-  return erros
+  return somenteErros({
+    nome: erroTexto(p.nome, 100),
+    categoriaId: erroInteiro(p.categoriaId)
+      ? 'Selecione uma categoria. Se necessário, cadastre-a primeiro.'
+      : '',
+    preco: erroDinheiro(p.preco),
+    descricao: (p.descricao?.length ?? 0) > 65535 ? 'Use até 65535 caracteres.' : '',
+  })
 }
 
 function textoConfirmacao(p) {

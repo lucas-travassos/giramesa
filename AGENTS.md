@@ -19,13 +19,15 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 
 - **Front:** Vue 3 (Composition API, `<script setup>`), Pinia, Vue Router, Bootstrap 5 + Bootstrap Icons, Chart.js via vue-chartjs, axios (`1.20.0` exato).
 - **Back:** Node.js, Express, MySQL, Sequelize, JWT, bcrypt, cors, dotenv (`16.4.5` exato).
+- Proteção da API: Helmet e express-rate-limit, com versões exatas no package.json.
 - A stack é limitada ao conteúdo do curso. **Qualquer tecnologia, biblioteca ou ferramenta fora da lista** (inclusive de teste, validação, lint ou UI) exige parar, explicar o motivo e obter autorização antes de instalar.
 
 ## 3. Ambiente
 
-- Desenvolvimento em Windows, com MySQL pelo XAMPP e comandos em Git Bash. Front (Vite, porta 5173) na raiz do repositório; API (Express, porta 3001 por padrão, configurável via `PORT`) em `backend/`. A 3000 pode estar ocupada por outros projetos (ex.: containers Docker), o que já causou erro de CORS ao enviar o login para a API errada.
+- Desenvolvimento em Windows, com destino de banco MySQL 8.4 LTS em Docker Compose e Node/Vite locais. Porta do banco do projeto: 127.0.0.1:3309; volume dedicado, sem alterar serviços de outros projetos. Situação da migração e caminhos locais em STATUS. Front (Vite, porta 5173) na raiz do repositório; API (Express, porta 3001 por padrão, configurável via `PORT`) em `backend/`. A 3000 pode estar ocupada por outros projetos (ex.: containers Docker), o que já causou erro de CORS ao enviar o login para a API errada.
 - Front e back rodam em **terminais separados, ao mesmo tempo**.
-- Para executar: MySQL ligado → `npm run dev` em `backend/` (confirmar "Conexao com MySQL estabelecida.") → `npm run dev` na raiz → abrir `http://localhost:5173`. O token JWT vale 8h.
+- Após importar o SQL inicial ou atualizar uma versão com alteração de schema, executar `npm run db:migrate` em `backend/` antes de iniciar a API ou os seeds. Migrations usam Node/Sequelize existentes e registram checksum em `schema_migrations`; não editar uma migration já aplicada.
+- Para executar: Docker Desktop operacional → `docker compose up -d --wait` na raiz → `npm run dev` em `backend/` (confirmar "Conexao com MySQL estabelecida.") → `npm run dev` na raiz → abrir `http://localhost:5173`. O token JWT vale 8h. Não usar `down -v` ou limpeza global de volumes no fluxo de trabalho.
 - Usuários de demonstração: `admin@giramesa.com`, `caixa@giramesa.com`, `garcom@giramesa.com`. Em instalações novas, `docs/banco/instalacao-inicial.sql` cria essas contas com hash bcrypt da senha pública fictícia `123456`, documentada no README. O script `npm run seed:senhas` (ver `backend/`) redefine a senha de todas as contas do banco selecionado para esse valor; não é necessário após a importação inicial.
 - Após criar arquivos por comando de terminal, confira o conteúdo com `cat`.
 
@@ -44,6 +46,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 11. Idioma: interface, mensagens e comentários em pt-BR; nomes de domínio seguem o padrão existente.
 12. Sem funcionalidades além do escopo combinado: a aderência ao pedido importa na avaliação.
 13. **Redação da documentação e dos PRs:** usar tom impessoal, técnico e específico ao GiraMesa. Descrever problemas, decisões, comportamento, validações e pendências sem citar nomes pessoais ou reproduzir conversas de aprovação. Quando necessário, identificar responsabilidades pelo papel no projeto. Distinguir verificações automatizadas de validação manual e registrar os limites das evidências disponíveis. Preservar identificadores técnicos, links e dados de autoria acadêmica quando pertinentes.
+14. **PRs concisos:** descrever o problema, a mudança e a validação relevante em poucos parágrafos ou itens. Evitar inventários de arquivos, repetição da documentação e relatos do processo de trabalho.
 
 ### Ciclo de cada checkpoint
 
@@ -72,7 +75,7 @@ Quando autorizado no plano, distribuir escopos independentes entre implementaç�
 
 **Front (`src/`):** `views/` e `views/admin/`; `components/{layout,mesa,pedido,admin}`; `stores/` (auth, mesas, produtos, pedidos, usuarios, dashboard); `router/index.js` com `meta.perfis`, guarda de rota e menu gerado a partir das rotas; cliente axios com base URL, token automático e tratamento de 401. `CrudManager` é genérico e recebe a API por props. O estado do Pinia zera no reload da página.
 
-**Back (`backend/`):** `server.js` e `src/{config,models,controllers,routes,middlewares}`. Fluxo: `rota → verifyToken → verificarPermissao(...perfis) → controller`. Erros no formato `{ erro: "mensagem" }` com status adequado (400, 401, 403, 404, 409, 500). Os models espelham o DER, incluindo `categorias` e `pagamentos`.
+**Back (`backend/`):** `server.js` e `src/{config,models,controllers,routes,middlewares,services,validations,migrations}`. Fluxo: `rota → verifyToken → verificarPermissao(...perfis) → controller → service` nos pedidos e nas alterações de usuários. O token identifica o usuário; perfil e situação atuais são conferidos no banco. Schemas nativos validam os campos. Erros usam `{ erro: "mensagem" }`, incluindo 413 para corpo excedente e 429 para limite de login. Os models espelham o DER; `schema_migrations` é uma tabela técnica adicional.
 
 **Dinheiro:** `DECIMAL(8,2)` no banco; divisão de conta calculada em centavos.
 
@@ -83,7 +86,7 @@ Quando autorizado no plano, distribuir escopos independentes entre implementaç�
 - **Pagamentos:** parte a parte; formas dinheiro, débito, crédito e pix. Divisão por "pessoas restantes", valor sugerido editável; a última parte paga a diferença em centavos (ex.: 39,33 / 39,33 / 39,34). Pagar acima do saldo é bloqueado. Saldo zerado → pedido `finalizado` e mesa `disponivel`.
 - **Usuários:** sem exclusão física (inativar/reativar); e-mail único; **nunca fica sem administrador ativo**.
 - **Mesas:** o administrador só alterna `disponivel` ↔ `inativa`; `ocupada` e `caixa` só mudam pelo fluxo de atendimento. Mesa com histórico não pode ter o número alterado.
-- **Produtos:** descrição opcional. Produto já vendido tem **nome e categoria travados** (preço, descrição e situação seguem editáveis). Produto inativo some da tela de pedido. O preço vendido fica em `preco_unitario`, então reajuste não altera consumo antigo.
+- **Produtos:** descrição opcional. Produto já vendido tem **nome e categoria travados** (preço, descrição e situação seguem editáveis). Produto inativo some da tela de pedido. O item registra `nome_produto` e `preco_unitario` na venda; o consumo exibe esses valores preservados.
 - **Categorias:** renomear com aviso; remover bloqueado se houver produtos vinculados.
 - **Dashboard:** dados reais via endpoint de agregação, só administrador. Considerar somente pedidos `finalizado`, pela `data_fechamento`, no dia de São Paulo. Faturamento, quantidade, ticket médio, categorias e formas de pagamento do dia; evolução dos últimos sete dias, incluindo hoje. Pagamentos parciais só entram quando o pedido é finalizado, na data de fechamento.
 
@@ -110,7 +113,7 @@ O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, c
 - `dotenv` e `axios` com versão exata.
 - O seed original tinha ENUMs vazios, sem `categorias` e `pagamentos`, e `data_fechamento` deveria aceitar NULL; tudo corrigido nos models.
 - Preferir exclusão lógica a hard delete quando há chave estrangeira.
-- Gravar o nome do produto no item do pedido na venda é melhoria planejada, para o histórico sobreviver a renomeações.
+- Testes repetíveis usam container, banco e API temporários próprios; não dependem de credenciais ou arquivos montados do banco principal. O encerramento remove apenas os recursos identificados como pertencentes à execução.
 
 ## 10. Documentação e entrega
 
