@@ -6,6 +6,10 @@ Dados de demonstração: [execução de `seed:demo` e critérios dos dados](banc
 
 Instalação nova: [README do projeto](../README.md) e [SQL de estrutura e dados iniciais fictícios](banco/instalacao-inicial.sql). Roteiros, resultados atuais e limites das evidências em [TESTES.md](TESTES.md).
 
+Ambiente 12.4: banco em Docker Compose, Node/Vite locais. Preparação, persistência, migração e retorno no [README](../README.md#migração-persistência-e-retorno). Importação, configuração, perfis HTTP e persistência aprovados por scripts; aceite visual mínimo aprovado em 29/10/2026. A porta antiga 3308 está ocupada pelo EstoqueFacil e não deve ser reutilizada sem identificar a origem. Situação em STATUS.
+
+Fluxo financeiro e contrato dos pedidos: [pedidos e pagamentos](api/pedidos.md). Proteções e schemas: [segurança e validações](api/seguranca-validacoes.md). Evolução do banco: [migrations e backup](banco/migracoes.md). Testes repetíveis: npm test em backend/, com resultado atual em TESTES.
+
 ## Documentos de trabalho
 
 - [STATUS.md](STATUS.md): estado real, bloqueios e próxima ação; curto e reescrito.

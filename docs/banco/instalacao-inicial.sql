@@ -1,4 +1,5 @@
 -- GiraMesa: estrutura e dados ficticios para uma instalacao nova.
+-- Apos importar, executar npm run db:migrate em backend/ antes da API e dos seeds.
 -- Selecionar um banco VAZIO antes da importacao. Este arquivo nao e uma migration.
 -- Nao remove tabelas nem atualiza dados existentes.
 -- Senha publica das tres contas de demonstracao: 123456 (hash bcrypt abaixo).

@@ -14,7 +14,7 @@ Cada linha é uma entrega pequena: plano → aprovação → implementação →
 | Janela-alvo | Resultado esperado |
 |---|---|
 | 27–30/10 | Disponibilizar banco saudável para teste, aceitar e fechar 12.3, abrir PR do pacote atual; definir e executar 12.4 em entrega separada |
-| 31/10–06/11 | Corrigir limites de pagamento e atomicidade (14.0), criar regressão repetível (14.7), priorizar formulários e fluxo mobile (13.3/13.4); textos acadêmicos/API em paralelo |
+| 31/10–06/11 | Concluir o pacote de robustez 14 e iniciar formulários/mobile (13.3/13.4); textos acadêmicos/API em paralelo |
 | 07–13/11 | Finalizar estados e feedback, identidade visual e acessibilidade básica; produzir figuras e consolidar o texto técnico |
 | 14–17/11 | Regressão integral, instalação/restauração final, correção de bloqueadores, revisão de DER/caso de uso e ABNT |
 | 18–19/11 | Congelar funcionalidades; finalizar fontes editáveis, PDF, prints e pacote demonstrável; conferir checklist de entrega |
@@ -30,7 +30,7 @@ As janelas são metas de trabalho. Se houver desvio, preservar funcionamento, te
 2. Estabilizar o ambiente (12.4) e corrigir os riscos financeiros (14.0), com testes repetíveis (14.7), antes de ampliar o acabamento visual.
 3. Executar UX e documentação em paralelo, mantendo uma versão demonstrável.
 4. Usar [TESTES.md](TESTES.md) como roteiro único e registro atual. Reexecutar o conjunto crítico antes de PR e entrega; não repetir testes sem mudança ou risco novo.
-5. Não instalar dependências novas nem iniciar refatorações amplas para cumprir o calendário. Cada implementação mantém aprovação de escopo.
+5. Usar a stack aprovada. Helmet e express-rate-limit fazem parte do pacote 14; migrations e schemas usam Node/Sequelize existentes, sem bibliotecas adicionais. Agrupar mudanças relacionadas com uma validação consolidada.
 
 ## Trabalho paralelo
 
@@ -40,7 +40,7 @@ Na revisão deste plano, dois agentes atuaram somente em leitura: prioridades t�
 
 ## Fase A — Fechar a entrega funcional
 
-O PR do pacote atual reúne 12.1, 12.2 e 12.3 e será aberto após o fechamento do 12.3. A migração 12.4 será uma entrega posterior, sem atrasar esse PR. Não abrir PR ou fazer merge sem solicitação.
+O PR #2 integrou 12.1–12.3 na main em 29/10/2026 (b29434b). A entrega seguinte reúne o ambiente 12.4 e o bloco 14. Não abrir novo PR ou fazer merge sem solicitação.
 
 | ID | Escopo | Teste esperado | Commit(s) |
 |---|---|---|---|
@@ -48,15 +48,15 @@ O PR do pacote atual reúne 12.1, 12.2 e 12.3 e será aberto após o fechamento 
 | 12.1 ✅ | Script `seed:demo` idempotente: histórico de pedidos e pagamentos dos últimos sete dias. Implementado, aplicado ao banco de demonstração e validado por script e pelo roteiro manual; concluído em develop | Dashboard populado após rodar o script; rodar 2x não duplica | `ffca9bc` backend / commit `docs:` de fechamento |
 | 12.2 ✅ | Verificação de mocks, caminho antigo `@salvar/@remover` e código sem uso: não foram encontrados remanescentes nas verificações realizadas. ESLint e build aprovados; sem alterações no frontend. Concluído em develop | Inspeção, ESLint e build sem erros ou avisos; validação manual anterior registrada no 12.1 | `docs: registra verificacao do frontend no checkpoint 12.2` |
 | 12.3 ✅ | README, SQL inicial e matriz de testes consolidados. Integração HTTP em banco vazio e roteiro funcional manual aprovados (28/10, mesa 10, R$ 16,00). Configuração persistente transferida ao 12.4; instalação totalmente reproduzível não comprovada | Evidências e limites em TESTES; cópia funciona com VITE_API_URL na sessão | `docs: conclui instalacao inicial e consolida testes` |
-| 12.4 ⏳ | Ambiente local sem XAMPP: migrar somente o GiraMesa para MySQL 8.4 LTS nativo ou em Docker Compose, mantendo Node/Vite locais. Destino pendente de decisão; Docker exige aprovação explícita | Importação SQL, registros e totais preservados, três perfis, seed, reinício e persistência; funcionar com serviços do XAMPP parados | Definir após aprovação do destino |
+| 12.4 ✅ | Ambiente local sem XAMPP: somente MySQL 8.4.13 em Docker Compose, volume persistente e Node/Vite locais. Cópias externas, importação de três bancos/21 tabelas e totais conferidos; Compose, configuração persistente e reinício/persistência aprovados. SQL inicial, seed 2x e perfis HTTP aprovados. Aceite visual mínimo aprovado em 29/10; origem antiga 3308 agora está no EstoqueFacil | Importação SQL, registros e totais preservados, três perfis, seed, reinício e persistência; funcionar com serviços do XAMPP parados | Definir no fechamento após validação |
 
 ### Escopo proposto do 12.4
 
 - A recuperação validada já permite executar a cópia. Migrar para um ambiente definitivo e resolver a configuração persistente de VITE_API_URL, validando reinício sem variável temporária. Não confundir recuperação com migração definitiva.
-- **Opção A:** MySQL 8.4 LTS como serviço dedicado no Windows. **Opção B, recomendada para reprodutibilidade:** somente o banco em Docker Compose, com volume persistente e porta local própria. A escolha ainda não foi aprovada; Docker/Compose instalados não equivalem a migração autorizada.
+- **Destino definido:** opção B, somente MySQL 8.4.13 em Docker Compose, volume persistente e porta 127.0.0.1:3309. Node/Vite locais em C:/Projetos/giramesa. Docker operacional após atualização para 4.97.0; destino importado e validado por scripts contra o dump externo. A porta 3308 passou a pertencer ao EstoqueFacil; origem online não revalidada. Aplicação nova usa somente 3309. Aceite visual mínimo aprovado em 29/10; publicação ainda pendente.
 - Preservar o serviço MySQL 8.0 existente na porta 3307 e os bancos de outros projetos. Migrar os bancos identificados como GiraMesa por SQL; criar contas de serviço no destino, sem importar tabelas internas mysql.* entre MariaDB e MySQL.
 - Conferir restauração, conteúdo, permissões e totais antes de alterar o destino usado pela aplicação. Planejar retorno ao ambiente anterior caso a validação falhe.
-- Atualizar README, exemplos de ambiente e instruções de testes; criar `compose.yaml` somente se a opção B for aprovada. Não adicionar bibliotecas à aplicação para essa migração.
+- Atualizar README, exemplos de ambiente e instruções de testes; manter `compose.yaml` com somente o serviço de banco. Não adicionar bibliotecas à aplicação para essa migração.
 - A nova configuração do projeto não deve depender de executáveis, Apache ou diretórios do XAMPP. Como o repositório e os backups atuais ficam dentro de C:/xampp, planejar cópias verificadas fora dessa pasta antes de qualquer desinstalação. Não mover a árvore com alterações locais sem preservá-las.
 - Containerização da API/frontend, deploy e CI ficam para uma etapa futura; não entram automaticamente neste escopo.
 
@@ -73,17 +73,19 @@ O PR do pacote atual reúne 12.1, 12.2 e 12.3 e será aberto após o fechamento 
 
 ## Fase C — Segurança do fluxo financeiro e robustez
 
+Os itens 14.1–14.8 compõem uma entrega conjunta antes da publicação. Implementação, regressão de 20 grupos e aceite visual consolidado aprovados em 04/11/2026. Publicação organizada em backend/ambiente, frontend e documentação.
+
 | ID | Escopo | Prioridade / autorização | Commit previsto |
 |---|---|---|---|
-| 14.0 ⏳ | Corrigir a tolerância indevida de R$ 0,01: calcular/validar saldo em centavos, bloquear excesso e finalizar somente em zero. Tornar fechamento/pagamentos/reabertura atômicos com transação/bloqueio adequados | Obrigatório antes da entrega; plano específico antes do código. Divergência confirmada por inspeção; falha concorrente ainda não reproduzida | `fix: corrige saldo e consistencia do fechamento` |
-| 14.1 | Padronização de erros nos caminhos afetados; middleware global somente se necessário para cobrir falha identificada | Correções pontuais antes da entrega; evitar refatoração geral | Definir pelo defeito corrigido |
-| 14.2 | Helmet, rate limit no login e CORS por variável | Pós-entrega local, salvo requisito de publicação; novas bibliotecas dependem de aprovação | `feat: adiciona helmet, rate limit no login e cors por ambiente` |
-| 14.3 | Snapshot do nome do produto no item e atualização do DER | Pós-entrega, salvo exigência acadêmica. Nome/categoria de produto vendido já ficam travados | `feat: grava nome do produto no item do pedido` |
-| 14.4 | Índices e constraints adicionais em SQL versionado | Pós-entrega, salvo defeito ou gargalo demonstrado; manter FKs/índices necessários ao schema inicial | `feat: adiciona indices e constraints ao banco` |
-| 14.5 | Migrations para evolução do schema; a API atual apenas autentica a conexão, não executa sync | Pós-entrega; sequelize-cli depende de autorização | `feat: adota migrations do sequelize` |
-| 14.6 | Centralização de validação por schemas | Pós-entrega; biblioteca depende de autorização. Validações financeiras necessárias entram no 14.0 | `feat: valida entradas da api com schemas` |
-| 14.7 ⏳ | Versionar scripts repetíveis dos fluxos críticos com assert/fetch nativos do Node, banco descartável e resumo de resultados; ainda não implementados | Obrigatório antes da entrega; sem pacotes novos. Framework/Supertest somente se aprovados posteriormente | `feat: cria verificacao repetivel dos fluxos criticos` |
-| 14.8 | Extração geral de services | Pós-entrega; não ampliar a correção financeira para uma refatoração de arquitetura | `feat: extrai regras de pedido e pagamento para services` |
+| 14.0 ✅ | Corrigir a tolerância indevida de R$ 0,01: calcular/validar saldo em centavos, bloquear excesso e finalizar somente em zero. Tornar fechamento/pagamentos/reabertura atômicos com transação/bloqueio adequados | Implementação local autorizada em 29/10: centavos, transações e bloqueios no atendimento. Verificações de sintaxe/helper e 13 grupos de integração aprovados em 29/10; quatro passos financeiros aprovados manualmente em 29/10; publicação nesta entrega | `fix: corrige saldo e consistencia do fechamento` |
+| 14.1 ✅ | Middleware comum para erros HTTP, JSON inválido/excedente e falhas de persistência; respostas sempre em JSON | Implementado e testado em 04/11; aceite conjunto aprovado em 04/11 | `fix: padroniza erros da api` |
+| 14.2 ✅ | Helmet 8.3.0, express-rate-limit 8.7.2 no login, CORS configurável e perfil/situação atuais no token | Implementado; headers/CORS/429/retomada e revogação de permissões aprovados por script em 04/11; aceite conjunto aprovado em 04/11 | `feat: protege acesso e login da api` |
+| 14.3 ✅ | nome_produto no item, backfill, exibição pelo snapshot e DER atualizado; bloqueio de renomeação do produto vendido mantido | Implementado; migração e snapshot aprovados por script em 04/11; conferência visual aprovada em 04/11 | `feat: preserva nome do produto no pedido` |
+| 14.4 ✅ | Checks de valores/quantidades e índice pedidos(status,data_fechamento) em migration versionada; sem duplicar índices de FKs | Aplicado e testado em 04/11; não há alegação de ganho medido de desempenho; aceite conjunto aprovado em 04/11 | `feat: reforca integridade do banco` |
+| 14.5 ✅ | Migrador Node/Sequelize com advisory lock, checksum e retomada idempotente; backup SQL fora do repositório | Preflight, backfill, repetição, checksum e restauração aprovados; aplicado no banco da API com dados anteriores preservados em 04/11; aceite conjunto aprovado em 04/11 | `feat: versiona evolucao do banco` |
+| 14.6 ✅ | Schemas nativos para campos, IDs, enums, dinheiro e cadastros, mantendo senha vazia na edição | Implementado e testado em 04/11, sem nova biblioteca; aceite conjunto aprovado em 04/11 | `feat: centraliza validacoes da api` |
+| 14.7 ✅ | npm test usa container MySQL e API próprios, portas livres, fixtures novas e limpeza por identidade | 20 grupos aprovados em 04/11, sem acesso a credenciais/volumes do banco principal. Aceite financeiro anterior de 29/10 preservado; validação visual das adições aprovada em 04/11 | `feat: amplia verificacao dos fluxos criticos` |
+| 14.8 ✅ | Regras transacionais em pedidoService e alterações de contas em usuarioService; controllers com HTTP e validação | Implementado; regressão financeira e concorrência do último administrador aprovadas em 04/11. Cadastros simples permanecem nos controllers; aceite conjunto aprovado em 04/11 | `feat: separa regras de pedidos e usuarios` |
 
 ## Fase D — Documentação final em paralelo, obrigatória até 20/11
 
@@ -91,7 +93,7 @@ O PR do pacote atual reúne 12.1, 12.2 e 12.3 e será aberto após o fechamento 
 |---|---|---|---|
 | 15.1 ✅ | Estrutura docs e índice existentes. Operação consolidada em STATUS/plano/TESTES; manter relatórios antigos como arquivo | Estrutura registrada no Git | `077d732` e revisões posteriores |
 | 15.2 | Texto ABNT: resumo, introdução, objetivos, atualizados para o sistema full-stack | Conferir os modelos institucionais locais e confirmar os dados da capa | `docs: atualiza resumo, introducao e objetivos` |
-| 15.3 | Caso de uso e DER conforme o schema efetivamente entregue, incluindo categorias e pagamentos | Não bloquear pelo snapshot adiado; descrever somente campos implementados | `docs: atualiza caso de uso e der` |
+| 15.3 | Caso de uso e DER conforme o schema efetivamente entregue, incluindo categorias e pagamentos | Incluir snapshot implementado e separar schema_migrations das entidades de domínio | `docs: atualiza caso de uso e der` |
 | 15.4 | Descrição das telas com figuras numeradas (desktop e mobile) | Capturas das telas desktop e mobile | `docs: atualiza descricao das telas` |
 | 15.5 | Documentação da API (endpoints, perfis, exemplos, erros), gerada a partir do código | — | `docs: documenta a api` |
 | 15.6 | Metodologia, matriz de testes executados, resultados, conclusão, referências | Registros dos testes executados e fontes consultadas | `docs: adiciona metodologia, resultados e conclusao` |
