@@ -2,7 +2,7 @@
 
 ## Execução
 
-Com o MySQL do XAMPP ligado, executar em `backend/`:
+Com o MySQL do projeto em Docker Compose operacional e as migrations aplicadas, executar em `backend/`:
 
 ```sh
 npm run seed:demo
@@ -44,6 +44,6 @@ Todos os registros de uma execução são gravados em uma transação. O bloquei
 
 Em caso de erro, o comando retorna código 1 e orienta a verificar conexão, tabelas e conta de demonstração. Não informa sucesso nem imprime credenciais. Registros confirmados em execuções anteriores são preservados.
 
-## Verificações registradas
+## Verificações
 
-Os testes do checkpoint 12.1 cobriram totais no dashboard real, reexecução, execução concorrente, novo dia, limites de data, rollback e falha de conexão controlada. A validação manual dessa etapa foi aprovada; resultado informado pelo responsável pelo produto, sem capturas de tela anexadas. Consultar [TESTES.md](../TESTES.md) para o roteiro e os resultados atuais; o [relatório 12.1](../checkpoints/12.1-seed-demonstracao.md) permanece como evidência histórica.
+Consultar [TESTES.md](../TESTES.md) para a última execução, evidências e limites. O histórico das alterações permanece no Git.

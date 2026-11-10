@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1050" viewBox="0 0 1920 1050">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="10" y="70" width="560" height="424" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="10" y="70" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="290.0" y="113" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">usuarios</text>
+<text x="23" y="171" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="75" y="171" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">usuario_id</text>
+<text x="558" y="171" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="23" y="223" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="223" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">nome</text>
+<text x="558" y="223" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(100)</text>
+<text x="23" y="275" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">UQ</text>
+<text x="75" y="275" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">email</text>
+<text x="558" y="275" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(150)</text>
+<text x="23" y="327" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="327" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">senha</text>
+<text x="558" y="327" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(255)</text>
+<text x="23" y="379" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="379" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">nivel_acesso</text>
+<text x="558" y="379" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<text x="23" y="431" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="431" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">status</text>
+<text x="558" y="431" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<text x="23" y="483" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="483" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">created_at</text>
+<text x="558" y="483" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">datetime</text>
+<rect x="680" y="70" width="560" height="424" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="680" y="70" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="960.0" y="113" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">pedidos</text>
+<text x="693" y="171" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="745" y="171" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">pedido_id</text>
+<text x="1228" y="171" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="693" y="223" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="745" y="223" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">mesa_id</text>
+<text x="1228" y="223" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="693" y="275" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="745" y="275" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">usuario_id</text>
+<text x="1228" y="275" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="693" y="327" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="327" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">data_abertura</text>
+<text x="1228" y="327" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">datetime</text>
+<text x="693" y="379" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="379" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">data_fechamento</text>
+<text x="1228" y="379" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">datetime (N)</text>
+<text x="693" y="431" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="431" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">status</text>
+<text x="1228" y="431" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<text x="693" y="483" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="483" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">valor_total</text>
+<text x="1228" y="483" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">decimal(8,2)</text>
+<rect x="1350" y="70" width="560" height="424" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="1350" y="70" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="1630.0" y="113" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">itens_pedido</text>
+<text x="1363" y="171" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="1415" y="171" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">item_id</text>
+<text x="1898" y="171" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="1363" y="223" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="1415" y="223" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">pedido_id</text>
+<text x="1898" y="223" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="1363" y="275" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="1415" y="275" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">produto_id</text>
+<text x="1898" y="275" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="1363" y="327" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="327" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">quantidade</text>
+<text x="1898" y="327" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int</text>
+<text x="1363" y="379" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="379" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">preco_unitario</text>
+<text x="1898" y="379" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">decimal(8,2)</text>
+<text x="1363" y="431" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="431" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">nome_produto</text>
+<text x="1898" y="431" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(100)</text>
+<text x="1363" y="483" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="483" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">observacao</text>
+<text x="1898" y="483" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(255) (N)</text>
+<rect x="10" y="610" width="560" height="216" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="10" y="610" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="290.0" y="653" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">mesas</text>
+<text x="23" y="711" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="75" y="711" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">mesa_id</text>
+<text x="558" y="711" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="23" y="763" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">UQ</text>
+<text x="75" y="763" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">numero</text>
+<text x="558" y="763" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int</text>
+<text x="23" y="815" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="75" y="815" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">status</text>
+<text x="558" y="815" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<rect x="10" y="870" width="560" height="164" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="10" y="870" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="290.0" y="913" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">categorias</text>
+<text x="23" y="971" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="75" y="971" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">categoria_id</text>
+<text x="558" y="971" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="23" y="1023" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">UQ</text>
+<text x="75" y="1023" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">nome</text>
+<text x="558" y="1023" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(50)</text>
+<rect x="680" y="610" width="560" height="320" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="680" y="610" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="960.0" y="653" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">pagamentos</text>
+<text x="693" y="711" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="745" y="711" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">pagamento_id</text>
+<text x="1228" y="711" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="693" y="763" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="745" y="763" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">pedido_id</text>
+<text x="1228" y="763" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="693" y="815" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="815" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">forma_pagamento</text>
+<text x="1228" y="815" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<text x="693" y="867" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="867" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">valor</text>
+<text x="1228" y="867" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">decimal(8,2)</text>
+<text x="693" y="919" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="745" y="919" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">data_pagamento</text>
+<text x="1228" y="919" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">datetime</text>
+<rect x="1350" y="610" width="560" height="424" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<rect x="1350" y="610" width="560" height="60" rx="0" fill="#eeeeee" stroke="#303030" stroke-width="2.5"/>
+<text x="1630.0" y="653" font-family="Arial, sans-serif" font-size="38" text-anchor="middle" font-weight="bold" fill="#202020">produtos</text>
+<text x="1363" y="711" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">PK</text>
+<text x="1415" y="711" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">produto_id</text>
+<text x="1898" y="711" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="1363" y="763" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">FK</text>
+<text x="1415" y="763" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">categoria_id</text>
+<text x="1898" y="763" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">int unsigned</text>
+<text x="1363" y="815" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="815" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">nome</text>
+<text x="1898" y="815" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">varchar(100)</text>
+<text x="1363" y="867" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="867" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">descricao</text>
+<text x="1898" y="867" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">text</text>
+<text x="1363" y="919" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="919" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">preco</text>
+<text x="1898" y="919" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">decimal(8,2)</text>
+<text x="1363" y="971" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="971" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">status</text>
+<text x="1898" y="971" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">enum</text>
+<text x="1363" y="1023" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020"></text>
+<text x="1415" y="1023" font-family="Arial, sans-serif" font-size="34" text-anchor="start" font-weight="normal" fill="#202020">created_at</text>
+<text x="1898" y="1023" font-family="Arial, sans-serif" font-size="28" text-anchor="end" font-weight="normal" fill="#202020">datetime</text>
+<path d="M570,260 L680,260" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="580" y="245" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="615" y="245" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<path d="M1240,260 L1350,260" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="1250" y="245" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="1285" y="245" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<path d="M570,710 L625,710 L625,390 L680,390" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="580" y="694" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="615" y="375" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<path d="M960,494 L960,610" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="975" y="530" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="975" y="595" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<path d="M1630,610 L1630,494" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="1648" y="590" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="1648" y="530" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<path d="M570,950 L1280,950 L1280,820 L1350,820" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="580" y="934" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">1</text>
+<text x="1285" y="805" font-family="Arial, sans-serif" font-size="26" text-anchor="start" font-weight="normal" fill="#202020">0..N</text>
+<text x="710" y="995" font-family="Arial, sans-serif" font-size="25" text-anchor="start" font-weight="normal" fill="#202020">PK: chave primária   FK: chave estrangeira</text>
+<text x="710" y="1030" font-family="Arial, sans-serif" font-size="25" text-anchor="start" font-weight="normal" fill="#202020">UQ: único   N: aceita nulo</text>
+</svg>

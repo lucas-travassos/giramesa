@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1122" viewBox="0 0 1600 1122">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="350" y="20" width="1225" height="1080" rx="0" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="962" y="66" font-family="Arial, sans-serif" font-size="36" text-anchor="middle" font-weight="bold" fill="#202020">GiraMesa</text>
+<ellipse cx="130" cy="100" rx="22" ry="22" fill="white" stroke="#303030" stroke-width="2.5"/>
+<path d="M130,122 L130,200" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M86,150 L174,150" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,200 L90,252" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,200 L170,252" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="130" y="291" font-family="Arial, sans-serif" font-size="33" text-anchor="middle" font-weight="normal" fill="#202020">Garçom</text>
+<ellipse cx="130" cy="450" rx="22" ry="22" fill="white" stroke="#303030" stroke-width="2.5"/>
+<path d="M130,472 L130,550" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M86,500 L174,500" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,550 L90,602" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,550 L170,602" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="130" y="641" font-family="Arial, sans-serif" font-size="33" text-anchor="middle" font-weight="normal" fill="#202020">Caixa</text>
+<ellipse cx="130" cy="800" rx="22" ry="22" fill="white" stroke="#303030" stroke-width="2.5"/>
+<path d="M130,822 L130,900" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M86,850 L174,850" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,900 L90,952" fill="none" stroke="#303030" stroke-width="3"/>
+<path d="M130,900 L170,952" fill="none" stroke="#303030" stroke-width="3"/>
+<text x="130" y="991" font-family="Arial, sans-serif" font-size="33" text-anchor="middle" font-weight="normal" fill="#202020">Administrador</text>
+<path d="M130,422 L130,318" fill="none" stroke="#303030" stroke-width="3"/>
+<polygon points="130,296 116,320 144,320" fill="white" stroke="#303030" stroke-width="3"/>
+<path d="M130,772 L130,668" fill="none" stroke="#303030" stroke-width="3"/>
+<polygon points="130,646 116,670 144,670" fill="white" stroke="#303030" stroke-width="3"/>
+<path d="M175,150 L445,150" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,150 L445,355" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,150 L445,570" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,150 L445,785" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,500 L300,500 L300,278 L1030,278 L1075,355" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,500 L300,500 L300,278 L1030,278 L1075,570" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,500 L300,500 L300,278 L1030,278 L1075,785" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,850 L300,850 L300,1015 L445,1015" fill="none" stroke="#303030" stroke-width="2.5"/>
+<path d="M175,850 L300,850 L300,1080 L1045,1080 L1075,1015" fill="none" stroke="#303030" stroke-width="2.5"/>
+<ellipse cx="660" cy="150" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="660" y="161.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Autenticar usuário</text>
+<ellipse cx="660" cy="355" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="660" y="348.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Consultar mesas</text>
+<text x="660" y="384.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">e produtos</text>
+<ellipse cx="660" cy="570" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="660" y="581.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Lançar pedido</text>
+<ellipse cx="660" cy="785" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="660" y="796.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Consultar consumo</text>
+<ellipse cx="660" cy="1015" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="660" y="1008.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Visualizar dashboard</text>
+<text x="660" y="1044.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">financeiro</text>
+<ellipse cx="1290" cy="355" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="1290" y="366.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Iniciar fechamento</text>
+<ellipse cx="1290" cy="570" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="1290" y="581.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Registrar pagamento</text>
+<ellipse cx="1290" cy="785" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="1290" y="796.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Reabrir pedido</text>
+<ellipse cx="1290" cy="1015" rx="215" ry="66" fill="white" stroke="#303030" stroke-width="2.5"/>
+<text x="1290" y="990.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">Gerenciar usuários,</text>
+<text x="1290" y="1026.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">mesas, categorias</text>
+<text x="1290" y="1062.0" font-family="Arial, sans-serif" font-size="31" text-anchor="middle" font-weight="normal" fill="#202020">e produtos</text>
+<text x="1290" y="887" font-family="Arial, sans-serif" font-size="23" text-anchor="middle" font-weight="normal" fill="#202020">Reabertura antes do primeiro pagamento</text>
+<text x="1290" y="907" font-family="Arial, sans-serif" font-size="23" text-anchor="middle" font-weight="normal" fill="#202020"></text>
+</svg>
