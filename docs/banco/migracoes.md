@@ -34,8 +34,8 @@ O banco passa a ter sete tabelas de domínio e uma tabela técnica. As regras qu
 
 Restaurar o backup somente em banco **novo e vazio**, selecionado no cliente MySQL. O arquivo não contém criação de contas nem troca automática de banco; executar `source caminho-do-backup.sql;`. Confirmar que o destino selecionado é o novo banco antes desse comando.
 
-Configurar a aplicação para o destino restaurado, executar `npm run db:migrate` e conferir conteúdo e totais antes do uso. Se a versão anterior da aplicação precisar voltar, preservar o banco atual e as escritas novas; não remover colunas ou checks para tentar um downgrade automático. O roteiro de recuperação por outro volume do Compose está no README.
+Configurar a aplicação para o destino restaurado, executar `npm run db:migrate` e conferir conteúdo e totais antes do uso. Se a versão anterior da aplicação precisar voltar, preservar o banco atual e as escritas novas; não remover colunas ou checks para tentar um downgrade automático. O roteiro de recuperação por outro volume do Compose está no [guia de instalação](../instalacao.md#recuperar-o-destino-sem-remover-o-volume-anterior).
 
-## Evidências atuais
+## Evidências
 
-Em 04/11/2026, a suíte descartável aprovou preflight com dados incompatíveis, backfill, repetição, recusa de checksum alterado e restauração integral de backup em outro banco. A migração no banco da API preservou os campos anteriores das sete tabelas por SHA-256, com 23 pedidos e R$ 1.262,30 em consumo e pagamentos. Backups privados antes/depois e manifesto estão em `C:/Backups/GiraMesa/20261104`. A última execução detalhada fica em [TESTES](../TESTES.md).
+Resultados de aplicação, preservação dos dados e restauração ficam em [TESTES](../TESTES.md), cenários T01 e T21. Caminhos do ambiente e backups privados ficam em STATUS. Não usar uma execução anterior como comprovação da instalação atual.

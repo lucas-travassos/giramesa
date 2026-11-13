@@ -12,7 +12,7 @@ Instruções de preparação do ambiente local, execução e recuperação. Os c
 
 No PowerShell, utilizar `npm.cmd` no lugar de `npm` em todos os comandos abaixo: por exemplo, `npm.cmd ci`, `npm.cmd run seed:demo` e `npm.cmd run dev`. Isso evita o bloqueio do lançador `npm.ps1` pela política de scripts. Usar `Copy-Item .env.example .env` e `Copy-Item backend/.env.example backend/.env` para as cópias da etapa 2, somente em uma instalação nova.
 
-Importação, perfis HTTP, SQL inicial, seeds e persistência foram verificados no ambiente local do 12.4. O aceite visual mínimo foi aprovado em 29/10/2026; instalação com `npm ci` em outra máquina não foi comprovada. Consultar STATUS e TESTES para os resultados e limites.
+Resultados de instalação, perfis, seeds e persistência ficam em [TESTES](TESTES.md). A instalação com npm ci em outra máquina não foi comprovada.
 
 ## 1. Obter o projeto e instalar dependências
 
@@ -179,7 +179,7 @@ npm test
 
 A suíte cria um container MySQL 8.4.13 com porta local livre, banco/usuário e credenciais temporários. A API de teste também usa porta livre e chave JWT própria. Os registros são fixtures novas, sem alterar contas ou dados de seed do ambiente principal. Não há pastas do Windows montadas nesse container nem acesso ao secret administrativo do Compose. A primeira execução precisa da imagem disponível localmente ou de conexão para baixá-la.
 
-Em 04/11/2026, os 20 grupos passaram: fluxo financeiro, autenticação/perfis, concorrência, rollback por falhas induzidas, migrations/checksum, snapshot, constraints, backup/restauração, validações, CORS, headers, limite de login e alterações de contas. O resumo sai no terminal; falha de teste ou limpeza retorna código de erro. O aceite manual conjunto do bloco 14 foi aprovado em 04/11 e fica separado na matriz TESTES.
+A suíte cobre fluxo financeiro, autenticação/perfis, concorrência, rollback, migrations, snapshot, integridade, backup/restauração e proteções HTTP. O resumo sai no terminal; falha de teste ou limpeza retorna código de erro. Última execução e aceite manual ficam separados em [TESTES](TESTES.md).
 
 O encerramento remove apenas a API e o container identificados como pertencentes à execução, incluindo seu volume anônimo. Em encerramento abrupto, conferir o nome exclusivo informado no início e o label giramesa.teste antes de qualquer limpeza; não remover recursos por prefixo indiscriminadamente. Os volumes dos projetos GiraMesa e EstoqueFacil não são usados pela suíte.
 
@@ -192,19 +192,15 @@ O encerramento remove apenas a API e o container identificados como pertencentes
 - **Carrinho perdido após recarregar:** o carrinho é local ao Pinia; navegar pela interface durante o atendimento. A sessão de autenticação é restaurada do `localStorage`.
 - **Falha de rede:** com a API desligada, as telas devem informar o erro. Reiniciar o backend e usar a ação de nova tentativa da tela.
 
-Na cópia antiga do 12.3, o Vite só funcionava com a URL definida na sessão; a causa do carregamento permanece inconclusiva. No destino do 12.4, a configuração foi recriada a partir do exemplo versionado e conferida após reiniciar API/Vite em terminais novos, sem variável temporária. O cliente também tem URL local padrão quando a variável estiver ausente. O ambiente novo não requer a configuração de sessão usada no teste anterior.
-
 ## Migração, persistência e retorno
 
-- Trabalhar em `C:/Projetos/giramesa`, fora do XAMPP. Preservar o repositório anterior e seus arquivos locais. A cópia foi comparada por SHA-256 antes das alterações do 12.4.
-- Preservação privada em `C:/Backups/GiraMesa/20261028`: repositório, cópia de testes, recuperação, dump atualizado `giramesa-origem-3308.sql`, duplicata em `dumps/`, conferência de conteúdo e manifesto das cópias. A cópia física da instância ativa tem dois arquivos divergentes e não comprova restauração; usar o dump lógico e testar a importação.
-- Origem do dump: `127.0.0.1:3308`. Após a atualização do Docker, essa porta passou a pertencer ao container estoque-db: reidentificar a instância MariaDB antes de tentar uma conexão ou retorno. O dump contém somente `giramesa`, `giramesa_validacao_manual` e `giramesa_validacao_manual_20261028`. Não importar `mysql.*`, contas ou permissões de MariaDB no MySQL. Criar contas no destino e conceder acesso somente aos bancos necessários.
-- Restaurar somente em destino novo e conferir estrutura, conteúdo, totais e permissões antes do uso. No 12.4, os três bancos e as 21 tabelas foram comparados ao dump externo e à conferência salva: contagens/conteúdo iguais por SHA-256 e estruturas equivalentes. A origem online não foi revalidada após a atualização do Docker. A API nova usa `giramesa_validacao_manual_20261028`: 22 pedidos e 30 pagamentos, total histórico de R$ 1.262,00 em cada conjunto. `DB_NAME` deve corresponder ao banco efetivamente validado.
-- Evitar atendimento simultâneo nas duas instalações. Se houver novas escritas na origem após o dump de referência, interromper o uso do destino até reconciliar os dados. Outros bancos e serviços permanecem ativos.
-- Reiniciar somente o banco do projeto com `docker compose restart db`; depois testar `docker compose down` e `docker compose up -d --wait`. O volume nomeado preserva os dados. Não usar `down -v`, remoção de volume ou `prune` para esse fluxo. Volume persistente não substitui backup lógico externo.
-- Validar o frontend em terminal novo, sem definir `VITE_API_URL` na sessão, e conferir a URL de login no navegador. Repetir com configuração explícita. Reiniciar API/Vite e conferir os dados; validar independência do XAMPP sem encerrar serviços de outros projetos.
-- Retorno antes de novos atendimentos no destino: parar somente API/Vite novos e o banco deste Compose (`docker compose stop db`); usar a instalação preservada da cópia somente após revalidar o endereço da instância MariaDB. A porta 3308 agora pertence ao EstoqueFacil; não reutilizar a configuração antiga sem essa conferência. Não sobrescrever a origem com o dump do MySQL. Se houver escritas novas no destino, preservá-las em dump separado e reconciliar os dados antes do retorno.
-- A aplicação nova já usa o MySQL em 3309. Importação, perfis HTTP, SQL inicial/seed em banco descartável, reinício/persistência e configuração persistente foram aprovados por comandos locais; aceite visual mínimo aprovado em 29/10/2026, registrado em TESTES. O banco descartável foi removido após conferir sua identidade.
+- Trabalhar na cópia ativa indicada em STATUS, fora do XAMPP. Não excluir a instalação anterior ou seus arquivos privados como parte da limpeza do repositório.
+- Preservar backup lógico externo antes de migrations ou troca de destino. Volume persistente não substitui backup; não usar cópia física de uma instância ativa como prova de recuperação.
+- Restaurar em banco novo, conferir estrutura, conteúdo, totais e permissões e executar as migrations antes de iniciar a aplicação. Não importar tabelas internas mysql.* entre produtos nem substituir contas do servidor.
+- DB_NAME deve corresponder ao banco validado. Evitar atendimento simultâneo em duas instalações; reconciliar quaisquer escritas posteriores ao backup antes de uma troca ou retorno.
+- Para reiniciar apenas o banco do projeto, usar docker compose restart db. docker compose down seguido de docker compose up -d --wait preserva o volume nomeado; não usar down -v ou limpeza global de volumes.
+- Após mudar a configuração, iniciar API/Vite em terminais novos, conferir a URL de login no navegador e repetir o roteiro aplicável de TESTES. O cliente tem URL local padrão quando VITE_API_URL está ausente.
+- Preservar serviços de outros projetos. A antiga porta 3308 pertence ao EstoqueFacil; não usar configurações antigas sem identificar novamente a instância. Para voltar a uma instalação anterior, preservar as escritas novas e confirmar compatibilidade antes de alterar o destino.
 
 ### Recuperar o destino sem remover o volume anterior
 

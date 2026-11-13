@@ -55,7 +55,7 @@ Sistema web de gerenciamento de mesas e pedidos para restaurantes. Foco no **gar
 3. **Roteiro de teste** passo a passo em `docs/TESTES.md`, cobrindo os cenários afetados, perfis, validações e falha de rede (backend desligado). Reexecutar o conjunto crítico antes de integrar uma entrega na main.
 4. O product owner testa e responde; ajustes e reteste.
 5. **Somente quando solicitado**, faça commit(s) e **`git push` imediato**, informando os hashes.
-6. **Fechamento do checkpoint (parte da definição de "pronto"):** no mesmo commit `docs:`, (a) **reescreva `docs/STATUS.md`** com o estado real; (b) atualize a última execução dos cenários afetados em `docs/TESTES.md`; (c) marque o item em `docs/plano-construcao.md`; (d) atualize a documentação técnica afetada (seção 10). O resumo do que mudou, por quê, validação e limites fica no commit/PR. **Não criar um novo relatório por checkpoint.** Preservar os relatórios históricos já versionados em `docs/checkpoints/`. Sem validação e esses registros o checkpoint não está fechado. Antes do push, mostre `git show --stat` para o product owner conferir.
+6. **Fechamento do checkpoint (parte da definição de "pronto"):** no mesmo commit `docs:`, (a) **reescreva `docs/STATUS.md`** com o estado real; (b) atualize a última execução dos cenários afetados em `docs/TESTES.md`; (c) revise `docs/plano-construcao.md`, removendo pendências concluídas e mantendo as restantes; (d) atualize a documentação técnica afetada (seção 10). Regras e decisões implementadas que continuem relevantes passam ao contexto estável deste AGENTS.md, sem copiar o histórico. O resumo do que mudou, por quê, validação e limites fica no commit/PR. **Não criar relatórios por checkpoint nem recriar pastas de histórico.** Sem validação e esses registros o checkpoint não está fechado. Antes do push, mostre `git show --stat` para o product owner conferir.
 
 ### Trabalho com agentes paralelos
 
@@ -78,6 +78,16 @@ Quando autorizado no plano, distribuir escopos independentes entre implementaç�
 **Back (`backend/`):** `server.js` e `src/{config,models,controllers,routes,middlewares,services,validations,migrations}`. Fluxo: `rota → verifyToken → verificarPermissao(...perfis) → controller → service` nos pedidos e nas alterações de usuários. O token identifica o usuário; perfil e situação atuais são conferidos no banco. Schemas nativos validam os campos. Erros usam `{ erro: "mensagem" }`, incluindo 413 para corpo excedente e 429 para limite de login. Os models espelham o DER; `schema_migrations` é uma tabela técnica adicional.
 
 **Dinheiro:** `DECIMAL(8,2)` no banco; divisão de conta calculada em centavos.
+
+### Contexto implementado
+
+- Interface e API já integradas ao MySQL, com autenticação, atendimento, fechamento, pagamentos parciais, quatro cadastros administrativos e dashboard por agregação real. Não tratar backend, banco ou dashboard como etapas futuras.
+- Operações de atendimento e pagamento usam transações `READ COMMITTED` e bloqueios na ordem mesa → pedido. Finalização exige saldo exatamente zero; alterações de usuários serializam a proteção do último administrador ativo.
+- O banco possui sete tabelas de domínio e `schema_migrations`. SQL inicial mais migrations preparam o schema; a API não usa `sync`. O migrador aplica advisory lock, checksum e retomada idempotente. A migration 001 preserva nome vendido, acrescenta checks e índice de status/data de fechamento. Backup lógico fica fora do repositório; restauração exige destino novo e conferência antes do uso.
+- `seed:demo` prepara histórico fictício dos últimos sete dias, com identificação dos registros e reexecução sem duplicação. Não usar seeds para limpar testes ou substituir dados de uma instalação existente.
+- `EstadoConteudo`, `CampoFormulario` e `DialogoModal` concentram estados de tela, validação e foco. No celular, o carrinho fica no rodapé e expande para revisão; no desktop, fica na lateral. Há rótulos, teclado, foco visível e preferência de movimento reduzido; isso não equivale a auditoria integral de acessibilidade.
+- A suíte em `backend/tests/fluxos-criticos.js` usa Node e dependências existentes, MySQL e API temporários, portas livres e fixtures novas. Resultados, datas e limites ficam somente em TESTES, sem confundir testes automatizados com aceite manual.
+- Deploy, CI, estoque, cozinha, QR Code, uso offline e novas formas de divisão de conta dependem de novo escopo. Exportação PDF/CSV e recuperação de senha por e-mail não estão implementadas; a aplicabilidade institucional permanece uma decisão pendente.
 
 ## 7. Regras de negócio decididas (não alterar sem o product owner)
 
@@ -102,7 +112,9 @@ Quando autorizado no plano, distribuir escopos independentes entre implementaç�
 
 ## 8. Estado atual
 
-O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, curto, nunca acumulativo), o roteiro em `docs/plano-construcao.md` e os cenários e resultados atuais em `docs/TESTES.md`. O histórico de alterações fica no Git e nos PRs; os relatórios antigos de `docs/checkpoints/` são apenas arquivo. Não duplique estado neste arquivo: ele guarda apenas regras estáveis. Quando algo vira regra permanente, migre do `STATUS.md` para a seção 7.
+O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, curto, nunca acumulativo); `docs/plano-construcao.md` guarda apenas pendências acionáveis e decisões ainda abertas; `docs/TESTES.md` guarda os roteiros e a última execução por cenário. Git e PRs guardam o histórico. Não recriar relatórios de checkpoints nem listas de entregas concluídas. Este AGENTS.md mantém contexto estável de arquitetura, decisões e regras, sem cronologia ou cópia dos resultados.
+
+**Atualização contínua:** ao concluir uma pendência, retirá-la do plano no mesmo checkpoint. Incorporar aqui somente o contexto estável ainda ausente; resultados ficam em TESTES, próxima ação em STATUS e navegação em docs/README.md. Não manter o mesmo checklist nesses arquivos. Não encerrar ou dispensar uma pendência sem evidência ou decisão de escopo.
 
 **Handoff:** quando o product owner pedir "faça o handoff", releia o git e reescreva o `STATUS.md` com o estado real, para que uma nova sessão retome sem perda de contexto.
 
@@ -117,7 +129,9 @@ O estado do projeto vive em **`docs/STATUS.md`** (reescrito a cada checkpoint, c
 
 ## 10. Documentação e entrega
 
-- Tudo fica em `docs/` (índice e checklist em `docs/README.md`).
+- Tudo fica em `docs/` (índice em `docs/README.md`, pendências em `docs/plano-construcao.md`).
+- `docs/README.md` é um índice dos arquivos existentes; pendências ficam somente no plano. `docs/abnt/` mantém apenas o PDF V2 vigente; o documento editável continua no Google Docs, com link no índice. Versões antigas e prompts não fazem parte do pacote atual. SVGs são fontes dos diagramas; PNGs são exportações para o relatório; capturas reais ficam em `docs/telas/capturas/`.
+- Revisões acadêmicas preservam a estrutura e a formatação existentes: alterar o conteúdo, sem criar capítulos, estilos ou modelo novo. Evitar travessões e hifens de estilo, preservando grafia correta e identificadores técnicos. Não alterar o PDF revisado para adequá-lo a um novo formato.
 - Quando um checkpoint altera regra, tela, tabela ou endpoint, atualize o documento correspondente **no mesmo checkpoint**, em commit `docs:` separado.
 - Nunca invente resultados, testes, prints ou referências: documente apenas o que foi implementado e testado.
 - Atualizar a mesma matriz `docs/TESTES.md` com a última execução de cada cenário, ambiente, resultado e referência de evidência. Não gerar arquivo de resultados por execução; consultar o histórico do Git quando necessário. Manter documentação acadêmica e técnica útil à entrega, sem duplicar o histórico dos PRs.

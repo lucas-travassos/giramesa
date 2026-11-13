@@ -30,6 +30,10 @@ O carrinho continua local ao Pinia: adicionar não grava no banco; enviar grava.
 
 ## Evidências e limites
 
-Testes executados e implementações aprovadas pelo responsável pelo produto em 04/11/2026. O aceite e os limites das evidências estão registrados em TESTES; a revisão anterior do agente permanece como evidência distinta.
+Revisão pelo navegador e aceite funcional são evidências distintas, registradas em [TESTES](../TESTES.md), cenários T11–T14. A matriz também registra os limites de aparelho físico, leitor de tela, zoom e regressão integral.
 
-Resultados e roteiro de aceite ficam em [TESTES](../TESTES.md). A revisão pelo navegador foi executada em 04/11/2026, em 360×800 e 390×844, com uma mesa nova e pedido quitado. Essa revisão é distinta do aceite do responsável pelo produto. Leitor de tela, aparelho físico, zoom de 200% e regressão integral dos três perfis ainda exigem conferência. Com o aceite visual registrado, os prints finais da documentação acadêmica podem ser produzidos.
+## Capturas da documentação
+
+Em 09/11/2026 foram produzidas 12 capturas reais em [capturas/](capturas/), incorporadas à v2 do relatório. Desktop: login, salão/pedido como garçom, fechamento como caixa e cinco telas administrativas. Mobile: salão/carrinho em viewport de 390×844 e fechamento em 390×1020, com todos os controles visíveis. As Figuras 3–10 substituem as anteriores; categorias ocupa a Figura 11 e o fluxo mobile as Figuras 12–14.
+
+Os identificadores dos pedidos, a quitação e a liberação da mesa estão registrados em TESTES/T04, T06 e T12. As capturas usam dados fictícios persistidos e representam telas reais; não substituem regressão integral ou validação em aparelho físico.
