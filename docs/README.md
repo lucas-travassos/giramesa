@@ -4,10 +4,16 @@
 
 ## Relatório e evidências
 
-- [Documentação V2 revisada em PDF](<abnt/Documentação GiraMesa v2.pdf>): versão adicionada após a revisão pelo responsável pelo produto, para validação do professor.
+- [Relatório final em PDF](<abnt/GiraMesa - relatorio final.pdf>), com o Quadro 1 de testes e as evidências do anexo.
 - [Documento editável no Google Docs](https://docs.google.com/document/d/12-eQdSeEEJZeOEPau8N1GjBKxeTxzPgJYcZUgGjNt58/edit): origem para ajustes de conteúdo e nova exportação, preservando a formatação atual.
 - Diagramas de [casos de uso](diagramas/caso-uso-giramesa.png) e [entidades e relacionamentos](diagramas/der-giramesa.png), com fontes [SVG dos casos de uso](diagramas/caso-uso-giramesa.svg) e [SVG do DER](diagramas/der-giramesa.svg). O [dicionário do banco](diagramas/der-giramesa.txt) detalha campos, chaves e integridade.
-- [Interface e capturas](telas/README.md): comportamento das telas e doze imagens reais em [capturas/](telas/capturas/).
+- [Interface e capturas](telas/README.md), com 25 imagens da aplicação em [capturas/](telas/capturas/).
+
+## Apresentação acadêmica
+
+- [Slides finais](<apresentacao/GiraMesa - Apresentação final.pptx>)
+- [Vídeo de demonstração](<apresentacao/GiraMesa - Demonstração.mp4>)
+- [Roteiro de ensaio](<apresentacao/GiraMesa - Roteiro de ensaio.docx>)
 
 ## Operação e contratos
 
@@ -23,4 +29,4 @@
 - [AGENTS.md](../AGENTS.md): contexto estável, arquitetura e regras de trabalho.
 - Git e PRs: histórico das mudanças. As versões antigas dos documentos versionados podem ser consultadas pelo Git.
 
-`abnt/` mantém somente o PDF vigente. `apresentacao/` está reservada para o roteiro e os slides. Materiais institucionais de referência continuam locais e ignorados pelo Git; não fazem parte do pacote público. Backups, configurações privadas e dumps de dados permanecem fora do repositório.
+`abnt/` mantém somente o PDF vigente. `apresentacao/` reúne os slides finais, o vídeo e o roteiro. Materiais institucionais de referência continuam locais e ignorados pelo Git; não fazem parte do pacote público. Backups, configurações privadas e dumps de dados permanecem fora do repositório.
