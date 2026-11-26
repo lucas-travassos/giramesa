@@ -4,9 +4,9 @@
 
 ## Repositório e entrega
 
-- Cópia ativa em C:/Projetos/giramesa. A entrega final segue em `develop` para integração via PR. A revisão anterior foi integrada à `main` no PR #4. A árvore C:/xampp/htdocs/giramesa corresponde à instalação antiga.
+- Cópia ativa em C:/Projetos/giramesa. A entrega acadêmica do commit `314fca1` está integrada à `main` pelo [PR #5](https://github.com/lucas-travassos/giramesa/pull/5), em `2e025fe`. A árvore C:/xampp/htdocs/giramesa corresponde à instalação antiga.
 - A pasta `abnt/` contém o relatório final de 31 páginas. O Quadro 1 e as Figuras 18 a 27 documentam dez cenários verificados em 23/11. O DER e as 25 capturas da interface estão indexados em [Documentação](README.md).
-- A pasta `apresentacao/` reúne os slides finais, o vídeo de demonstração e o roteiro de ensaio. O envio ao professor e o retorno da avaliação seguem no plano.
+- A pasta `apresentacao/` reúne slides, vídeo e roteiro. O [README da raiz](../README.md) apresenta o projeto e suas evidências. A próxima etapa acadêmica é analisar o terceiro parecer do professor, que será encaminhado para a revisão.
 
 ## Ambiente e validação
 

@@ -32,7 +32,7 @@ Base da última suíte: 70593a2 e pacote documental de entrega. As datas e bases
 | T22 | Cabeçalhos HTTP, CORS, erros JSON e limite de login | 25/11/2026: grupo 15 aprovado. Em 16/11, duas execuções passaram e uma retornou 401 em vez de 429 na verificação do limite de login. A API descartável usava janela de 1.000 ms | Aprovado na última execução. A causa da ocorrência anterior permanece em aberto. |
 | T23 | Snapshot e permissões refletem alterações posteriores | 04/11, grupos 16/19: item mantém nome/preço após alteração externa no produto da fixture; token antigo perde acesso após troca de perfil/inativação. Migração real sem nomes ausentes; telas compiladas priorizam snapshot | Automatizado e conferência visual de consumo/sessão aprovados em 04/11 |
 | T24 | Relatório revisado atende ao parecer e tem sumário e evidências consistentes | 25/11/2026: PDF final de 31 páginas, com o comando `npm test` na seção 4.3 e os dez cenários do Quadro 1 nas Figuras 18 a 27. A revisão de 23/11 conferiu títulos, imagens, fontes e a paginação do sumário. SHA-256 do PDF final: ece60a4541216f1320e0b2859d0008aeedde80797d99f56c86796c6bbc8ab641 | Verificação documental concluída. PDF final incluído na entrega. |
-| T25 | Pacote documental limpo, links válidos e artefatos íntegros | 25/11/2026: conferência de 26 links locais, do DER e das 25 capturas numeradas de 3 a 27. A estrutura interna do PPTX, com oito slides, e a do DOCX passaram na verificação de integridade. O MP4 foi identificado pelo cabeçalho do arquivo | Verificação estática do pacote. As verificações funcionais constam em T20. |
+| T25 | Pacote documental limpo, links válidos e artefatos íntegros | 25/11/2026: conferência de 26 links locais, do DER e das 25 capturas numeradas de 3 a 27. A estrutura interna do PPTX, com oito slides, e a do DOCX passaram na verificação de integridade. O MP4 foi identificado pelo cabeçalho do arquivo. Na revisão do README, foram conferidos dez destinos locais versionados, o PNG com texto alternativo e o acesso sem autenticação ao vídeo, ao PDF e à captura na `main` | Verificação estática da documentação. As verificações funcionais constam em T20. |
 
 ## Rotina de validação
 
@@ -76,8 +76,8 @@ Usar registros novos ou banco descartável identificado. Nunca inativar contas d
 
 ## Relatório e organização documental — T24, T25
 
-1. Abrir PDF V2 de abnt/ e documento editável indicado no índice. Conferir estrutura, títulos, margens, fontes, numeração, alinhamentos e legibilidade sem adotar outro modelo.
+1. Abrir o PDF vigente de `abnt/` e o documento editável indicado no índice. Conferir estrutura, títulos, margens, fontes, numeração, alinhamentos e legibilidade sem adotar outro modelo.
 2. Conferir problema e fontes, integração Vue/API/MySQL, perfis, criação ao enviar, centavos, pagamentos, reabertura, histórico e dashboard. Benefícios esperados não são resultados medidos.
 3. Conferir Figuras 1–14: casos de uso, sete entidades e seis relações de domínio, nove telas desktop e três mobile. schema_migrations fica separada do domínio; capturas não comprovam aparelho físico.
 4. Conferir citações/referências e páginas impressas do sumário. Registrar ajustes do professor, preservar a formatação e substituir somente o PDF vigente após exportação.
-5. Conferir links locais, arquivos do índice, ausência das versões/pastas removidas e integridade do PDF. Executar git diff --check e revisar o diff antes do commit.
+5. Conferir links locais do README e do índice, texto alternativo da captura em destaque, integridade do PDF e ausência de versões ou pastas já removidas. Verificar se os materiais indicados na vitrine estão acessíveis pelo repositório público. Executar git diff --check e revisar o diff antes do commit.
