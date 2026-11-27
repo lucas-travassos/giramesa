@@ -1,6 +1,6 @@
 # Pendências de entrega — GiraMesa
 
-Atualizado em 25/11/2026. O plano reúne pendências e decisões abertas. Resultados ficam em TESTES, decisões permanentes em AGENTS.md e o histórico no Git e nos PRs.
+Atualizado em 26/11/2026. O plano reúne pendências e decisões abertas. Resultados ficam em TESTES, decisões permanentes em AGENTS.md e o histórico no Git e nos PRs.
 
 ## Documentação e operação
 
@@ -13,7 +13,6 @@ Atualizado em 25/11/2026. O plano reúne pendências e decisões abertas. Result
 
 | Pendência | Critério de conclusão |
 |---|---|
-| Revisar o relatório técnico após o terceiro parecer do professor | Após o recebimento do parecer, mapear os pontos a ajustar, propor a revisão e atualizar o documento editável preservando a formatação. Conferir a consistência com o sistema e as evidências antes de exportar e substituir o PDF vigente. |
 | Confirmar exigências institucionais em aberto | Confirmar se exportação PDF/CSV e recuperação de senha por e-mail integram o escopo avaliado. Qualquer implementação depende dessa decisão. |
 
 A necessidade de validar leitor de tela, aparelho físico, zoom de 200%, carga e queda do MySQL permanece em aberto. Os limites das verificações existentes constam em TESTES.

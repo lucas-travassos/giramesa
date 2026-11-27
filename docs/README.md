@@ -4,7 +4,7 @@
 
 ## Relatório e evidências
 
-- [Relatório final em PDF](<abnt/GiraMesa - relatorio final.pdf>), com o Quadro 1 de testes e as evidências do anexo.
+- [Relatório final em PDF](<abnt/Documentação GiraMesa - Versão final.pdf>), com o Quadro 1 de testes e as evidências do anexo.
 - [Documento editável no Google Docs](https://docs.google.com/document/d/12-eQdSeEEJZeOEPau8N1GjBKxeTxzPgJYcZUgGjNt58/edit): origem para ajustes de conteúdo e nova exportação, preservando a formatação atual.
 - Diagramas de [casos de uso](diagramas/caso-uso-giramesa.png) e [entidades e relacionamentos](diagramas/der-giramesa.png), com fontes [SVG dos casos de uso](diagramas/caso-uso-giramesa.svg) e [SVG do DER](diagramas/der-giramesa.svg). O [dicionário do banco](diagramas/der-giramesa.txt) detalha campos, chaves e integridade.
 - [Interface e capturas](telas/README.md), com 25 imagens da aplicação em [capturas/](telas/capturas/).
