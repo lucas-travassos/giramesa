@@ -1,12 +1,12 @@
 # STATUS — GiraMesa
 
-> Atualizado em 25/11/2026. Pendências no plano, evidências em TESTES e histórico no Git e nos PRs.
+> Atualizado em 26/11/2026. Pendências no plano, evidências em TESTES e histórico no Git e nos PRs.
 
 ## Repositório e entrega
 
-- Cópia ativa em C:/Projetos/giramesa. A entrega final segue em `develop` para integração via PR. A revisão anterior foi integrada à `main` no PR #4. A árvore C:/xampp/htdocs/giramesa corresponde à instalação antiga.
+- Cópia ativa em C:/Projetos/giramesa. A entrega acadêmica do commit `314fca1` está integrada à `main` pelo [PR #5](https://github.com/lucas-travassos/giramesa/pull/5), em `2e025fe`. A árvore C:/xampp/htdocs/giramesa corresponde à instalação antiga.
 - A pasta `abnt/` contém o relatório final de 31 páginas. O Quadro 1 e as Figuras 18 a 27 documentam dez cenários verificados em 23/11. O DER e as 25 capturas da interface estão indexados em [Documentação](README.md).
-- A pasta `apresentacao/` reúne os slides finais, o vídeo de demonstração e o roteiro de ensaio. O envio ao professor e o retorno da avaliação seguem no plano.
+- A pasta `apresentacao/` reúne slides, vídeo e roteiro. O [README da raiz](../README.md) apresenta o projeto, as evidências e as lições aprendidas, com a captura atualizada do pedido no celular. A revisão do terceiro parecer foi concluída. O relatório atual identifica as ferramentas de teste e traz o DER reorganizado, com o sumário conferido na exportação. Os slides incluem o contexto de mercado e mantêm a demonstração original.
 
 ## Ambiente e validação
 
